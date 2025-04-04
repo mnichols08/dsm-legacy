@@ -1,0 +1,933 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Roboto:wght@300;400;500;700&display=swap');
+
+/* Define CSS variables at the highest level for shadow DOM access */
+:root {
+    /* Improved color palette with better contrast */
+    --primary: #c02a2a;
+    --primary-dark: #941e1e;
+    --secondary: #1a2249;
+    --secondary-light: #2d3a7c;
+    --accent: #f0b000;
+    --accent-dark: #d89c00;
+    --dark: #121212;
+    --light: #f8f8f8;
+    --gray: #666666;
+    --light-gray: #e5e5e5;
+    --white: #ffffff;
+    
+    /* Gradients */
+    --gradient: linear-gradient(135deg, var(--primary), var(--secondary));
+    --gradient-light: linear-gradient(135deg, var(--primary-dark), var(--secondary-light));
+    
+    /* Fonts */
+    --primary-font: 'Roboto', sans-serif;
+    --heading-font: 'Orbitron', sans-serif;
+    
+    /* Shadows */
+    --primary-shadow: 0 5px 15px rgba(192, 42, 42, 0.25);
+    --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    --hover-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+
+    /* Transitions */
+    --transition-fast: all 0.2s ease;
+    --transition-medium: all 0.3s ease;
+    --transition-slow: all 0.5s ease;
+}
+
+/* Make sure Font Awesome is accessible to Shadow DOM */
+[class*="fa-"] {
+    font-family: 'Font Awesome 6 Free', 'Font Awesome 6 Brands';
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--primary-font);
+    background-color: var(--light);
+    color: var(--dark);
+    overflow-x: hidden;
+    line-height: 1.6;
+    font-size: 16px;
+}
+
+/* Improved accessibility for focus states */
+a:focus, button:focus, input:focus, [tabindex]:focus {
+    outline: 3px solid var(--accent);
+    outline-offset: 2px;
+}
+
+/* Skip to content link for keyboard users */
+.skip-to-content {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--primary);
+    color: white;
+    padding: 10px 15px;
+    z-index: 10000;
+    transition: top 0.3s ease;
+}
+
+.skip-to-content:focus {
+    top: 0;
+}
+
+/* === LOGO STYLES === */
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo-symbol {
+    position: relative;
+    width: 50px;
+    height: 50px;
+}
+
+.diamond {
+    position: absolute;
+    width: 35px;
+    height: 35px;
+    background-color: var(--primary);
+    transform: rotate(45deg);
+    top: 7px;
+    left: 7px;
+}
+
+.star {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--white);
+    font-size: 20px;
+}
+
+.logo-text {
+    margin-left: 15px;
+    color: var(--white);
+}
+
+.logo-text h1 {
+    font-family: var(--heading-font);
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+    margin: 0;
+}
+
+.logo-text span {
+    font-size: 0.7rem;
+    opacity: 0.7;
+}
+
+/* === NAV LINKS === */
+.nav-links {
+    display: flex;
+    gap: 2rem;
+}
+
+.nav-links a {
+    color: var(--white);
+    text-decoration: none;
+    font-weight: 500;
+    transition: var(--transition-medium);
+    position: relative;
+    padding: 5px 0;
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--primary);
+    transition: width 0.3s ease;
+}
+
+.nav-links a:hover::after,
+.nav-links a:focus::after {
+    width: 100%;
+}
+
+/* === SECTION STYLES === */
+.section {
+    padding: 100px 5%;
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: 3rem;
+    position: relative;
+}
+
+.section-title h2 {
+    font-family: var(--heading-font);
+    font-size: 2.5rem;
+    color: var(--secondary);
+    margin-bottom: 1rem;
+    position: relative;
+    display: inline-block;
+}
+
+.section-title h2::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: var(--primary);
+}
+
+.section-title p {
+    max-width: 700px;
+    margin: 0 auto;
+    color: var(--gray);
+}
+
+/* === ABOUT SECTION === */
+.about-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+    align-items: center;
+}
+
+.about-image {
+    flex: 1;
+    min-width: 300px;
+    max-width: 600px;
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+}
+
+.about-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 0.5s ease;
+}
+
+.about-image:hover img {
+    transform: scale(1.05);
+}
+
+.about-text {
+    flex: 1;
+    min-width: 300px;
+}
+
+.about-text h3 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    color: var(--secondary);
+    font-family: var(--heading-font);
+}
+
+.about-text p {
+    margin-bottom: 1.5rem;
+    line-height: 1.7;
+}
+
+.btn {
+    display: inline-block;
+    padding: 12px 30px;
+    background-color: var(--primary);
+    color: var(--white);
+    text-decoration: none;
+    font-weight: 700;
+    border-radius: 30px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: var(--transition-medium);
+    box-shadow: var(--primary-shadow);
+}
+
+.btn:hover, 
+.btn:focus {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(192, 42, 42, 0.3);
+    background-color: var(--primary-dark);
+}
+
+/* === PRECURSORS SECTION === */
+.vehicle-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.vehicle-card {
+    position: relative;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    transition: var(--transition-slow);
+    cursor: pointer;
+    height: 500px;
+}
+
+.vehicle-card:hover,
+.vehicle-card:focus-within {
+    transform: translateY(-10px);
+    box-shadow: var(--hover-shadow);
+}
+
+.vehicle-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--dark);
+}
+
+.vehicle-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--transition-slow);
+}
+
+.vehicle-card:hover .vehicle-image img,
+.vehicle-card:focus-within .vehicle-image img {
+    transform: scale(1.1);
+    opacity: 0.7;
+}
+
+.vehicle-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 30px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+    color: var(--white);
+    transform: translateY(calc(100% - 100px));
+    transition: var(--transition-slow);
+}
+
+.vehicle-card:hover .vehicle-overlay,
+.vehicle-card:focus-within .vehicle-overlay {
+    transform: translateY(0);
+}
+
+.vehicle-title {
+    font-family: var(--heading-font);
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+    position: relative;
+    padding-bottom: 0.5rem;
+}
+
+.vehicle-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background-color: var(--primary);
+    transition: width 0.3s ease;
+}
+
+.vehicle-card:hover .vehicle-title::after,
+.vehicle-card:focus-within .vehicle-title::after {
+    width: 100px;
+}
+
+.vehicle-years {
+    font-size: 0.9rem;
+    opacity: 0.7;
+    margin-bottom: 1rem;
+}
+
+.vehicle-desc {
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease 0.1s;
+}
+
+.vehicle-card:hover .vehicle-desc,
+.vehicle-card:focus-within .vehicle-desc {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.vehicle-specs {
+    display: flex;
+    gap: 1.5rem;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease 0.2s;
+}
+
+.vehicle-card:hover .vehicle-specs,
+.vehicle-card:focus-within .vehicle-specs {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.spec {
+    text-align: center;
+}
+
+.spec-value {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.spec-label {
+    font-size: 0.8rem;
+    opacity: 0.7;
+}
+
+/* === FACTORY SECTION === */
+.factory-section {
+    padding: 100px 0;
+    background-color: var(--secondary);
+    color: var(--white);
+    position: relative;
+    overflow: hidden;
+}
+
+.factory-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('https://picsum.photos/id/169/1920/1080') center/cover no-repeat fixed;
+    opacity: 0.15;
+    z-index: 0;
+}
+
+.factory-content {
+    position: relative;
+    z-index: 1;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 5%;
+}
+
+.factory-section .section-title h2 {
+    color: var(--white);
+}
+
+.factory-section .section-title p {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.factory-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-top: 4rem;
+}
+
+.factory-card {
+    background-color: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    transition: var(--transition-medium);
+    text-align: center;
+}
+
+.factory-card:hover,
+.factory-card:focus-within {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.factory-icon {
+    font-size: 3rem;
+    color: var(--accent);
+    margin-bottom: 1.5rem;
+}
+
+.factory-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: var(--accent);
+    font-family: var(--heading-font);
+}
+
+.factory-card p {
+    line-height: 1.7;
+}
+
+/* === LEGACY SECTION === */
+.legacy-section {
+    padding: 100px 5%;
+    background-color: var(--light);
+}
+
+.legacy-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4rem;
+    justify-content: center;
+    align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.legacy-text {
+    flex: 1;
+    min-width: 300px;
+}
+
+.legacy-text h3 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: var(--secondary);
+    font-family: var(--heading-font);
+}
+
+.legacy-text p {
+    margin-bottom: 1.5rem;
+    line-height: 1.7;
+}
+
+.legacy-images {
+    flex: 1;
+    min-width: 300px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.legacy-image {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    height: 200px;
+}
+
+.legacy-image:first-child {
+    grid-column: span 2;
+    height: 300px;
+}
+
+.legacy-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--transition-slow);
+}
+
+.legacy-image:hover img {
+    transform: scale(1.1);
+}
+
+/* === COMMUNITY SECTION === */
+.community-section {
+    padding: 100px 5%;
+    position: relative;
+    background-color: var(--secondary-light);
+    color: var(--white);
+    overflow: hidden;
+}
+
+.community-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('https://picsum.photos/id/111/1920/1080') center/cover no-repeat fixed;
+    opacity: 0.15;
+    z-index: 0;
+}
+
+.community-content {
+    position: relative;
+    z-index: 1;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.community-section .section-title h2 {
+    color: var(--white);
+}
+
+.community-section .section-title p {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.testimonials {
+    display: flex;
+    gap: 2rem;
+    overflow-x: auto;
+    padding: 2rem 0;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+}
+
+.testimonials::-webkit-scrollbar {
+    display: none;
+}
+
+.testimonial {
+    flex: 0 0 350px;
+    scroll-snap-align: start;
+    padding: 30px;
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.testimonial-text {
+    font-style: italic;
+    margin-bottom: 1.5rem;
+    line-height: 1.7;
+}
+
+.testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.author-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #ddd;
+    overflow: hidden;
+}
+
+.author-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.author-info h4 {
+    margin-bottom: 0.3rem;
+}
+
+.author-info p {
+    font-size: 0.9rem;
+    opacity: 0.7;
+}
+
+/* === GALLERY SECTION === */
+.gallery-section {
+    padding: 100px 5% 100px;
+    margin-bottom: 0;
+}
+
+/* === FOOTER SPACER === */
+.footer-spacer {
+    height: 150px;
+    background: linear-gradient(to bottom, var(--light) 0%, rgba(248, 248, 248, 0.8) 100%);
+    position: relative;
+}
+
+.footer-spacer::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 20px;
+    background-color: var(--primary);
+    clip-path: polygon(0 100%, 100% 100%, 50% 0);
+    transform: translateY(10px);
+}
+
+/* === FOOTER === */
+dsm-footer {
+    display: block;
+    margin-top: 0 !important;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 1200px) {
+    .section-title h2 {
+        font-size: 2.2rem;
+    }
+}
+
+@media (max-width: 992px) {
+    .section {
+        padding: 80px 5%;
+    }
+    
+    .about-content, .legacy-content {
+        gap: 3rem;
+    }
+    
+    .nav-links a {
+        margin-left: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .section {
+        padding: 60px 5%;
+    }
+    
+    .section-title h2 {
+        font-size: 1.8rem;
+    }
+    
+    .section-title p {
+        font-size: 0.95rem;
+    }
+    
+    .vehicle-cards {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    
+    .factory-card h3 {
+        font-size: 1.3rem;
+    }
+    
+    .testimonials {
+        padding: 1rem 0;
+    }
+    
+    .testimonial {
+        flex: 0 0 85%;
+        padding: 20px;
+    }
+    
+    /* Only add the button styles on mobile */
+    .btn {
+        display: block;
+        text-align: center;
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto;
+    }
+    
+    .about-text .btn, .legacy-text .btn {
+        margin: 0;
+    }
+}
+
+@media (max-width: 576px) {
+    body {
+        font-size: 15px;
+    }
+    
+    .logo-text h1 {
+        font-size: 0.9rem;
+    }
+    
+    .logo-text span {
+        font-size: 0.6rem;
+    }
+    
+    .logo-symbol {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .diamond {
+        width: 30px;
+        height: 30px;
+        top: 5px;
+        left: 5px;
+    }
+    
+    .star {
+        font-size: 18px;
+    }
+    
+    .legacy-images {
+        grid-template-columns: 1fr;
+    }
+    
+    .legacy-image:first-child {
+        grid-column: span 1;
+    }
+    
+    .btn {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+    
+    /* Only on very small screens, make single column */
+    .gallery-grid {
+        grid-template-columns: 1fr;
+        grid-auto-rows: 250px;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Ensure proper touch targets for mobile */
+    .nav-links a, 
+    .btn, 
+    .social-icon, 
+    .gallery-item,
+    .scroll-indicator {
+        min-height: 44px; /* Minimum Apple recommended touch target size */
+        min-width: 44px;
+    }
+    
+    .scroll-indicator {
+        bottom: 15px;
+        font-size: 1.8rem;
+    }
+    
+    .hero {
+        height: 90vh; /* Slightly shorter on small devices */
+    }
+    
+    .testimonial {
+        flex: 0 0 90%; /* Almost full width on very small screens */
+        padding: 15px;
+    }
+    
+    /* Adjust spacing for better mobile reading */
+    h3 {
+        margin-bottom: 0.8rem;
+    }
+    
+    p {
+        margin-bottom: 1.2rem;
+    }
+    
+    /* Override button styles for mobile */
+    .btn {
+        display: block;
+        text-align: center;
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto;
+    }
+    
+    .about-text .btn, .legacy-text .btn {
+        margin: 0;
+    }
+}
+
+@media (min-width: 769px) {
+    /* Fix vehicle card height on desktop */
+    .vehicle-card {
+        height: 500px !important; /* Ensure consistent height on desktop */
+    }
+    
+    /* Keep desktop flexbox layouts */
+    .about-content, .legacy-content {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    
+    /* Restore button styles on desktop */
+    .btn {
+        display: inline-block;
+        width: auto;
+        max-width: none;
+        margin: initial;
+    }
+    
+    .about-text .btn, .legacy-text .btn {
+        display: inline-block;
+        width: auto;
+    }
+    
+    /* Ensure vehicle cards are in a grid on desktop */
+    .vehicle-cards {
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)) !important;
+    }
+    
+    /* Gallery grid should remain wide on desktop */
+    .gallery-grid {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
+        grid-auto-rows: 300px !important;
+    }
+    
+    /* Ensure proper gallery item spans on desktop */
+    ::slotted(dsm-gallery-item:nth-child(3n+1)) {
+        grid-row: span 2 !important;
+    }
+    
+    /* Ensure factory grid remains wide */
+    .factory-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)) !important;
+    }
+    
+    /* Keep testimonials at proper width */
+    .testimonial {
+        flex: 0 0 350px !important;
+    }
+}
+
+/* Handle notched phones and safe areas */
+@supports (padding: max(0px)) {
+    body, .navbar, .footer {
+        padding-left: max(5%, env(safe-area-inset-left));
+        padding-right: max(5%, env(safe-area-inset-right));
+    }
+    
+    .back-to-top {
+        bottom: max(30px, env(safe-area-inset-bottom, 30px));
+        right: max(30px, env(safe-area-inset-right, 30px));
+    }
+}
+
+/* === ACCESSIBILITY ENHANCEMENTS === */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* Add high contrast mode support */
+@media (prefers-contrast: high) {
+    :root {
+        --primary: #b01010;
+        --secondary: #1d1d40;
+        --accent: #e29300;
+    }
+    
+    .btn {
+        border: 2px solid black;
+    }
+    
+    .nav-links a {
+        text-decoration: underline;
+    }
+}
+
+/* Ensure reduced motion is respected */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
