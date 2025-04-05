@@ -116,6 +116,12 @@ dsm-navbar {
     height: 50px;
 }
 
+.logo-symbol img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
 .diamond {
     position: absolute;
     width: 35px;
@@ -138,6 +144,11 @@ dsm-navbar {
 .logo-text {
     margin-left: 15px;
     color: var(--white);
+}
+
+.logo-text img {
+    height: 27px;
+    display: block;
 }
 
 .logo-text h1 {
