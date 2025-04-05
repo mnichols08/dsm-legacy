@@ -666,6 +666,86 @@ dsm-navbar {
     margin-bottom: 0;
 }
 
+/* === TECHNOLOGY TRANSFER CARDS === */
+.tech-card {
+    background-color: #f8f8f8;
+    border-radius: 10px;
+    padding: 25px;
+    transition: var(--transition-medium);
+    position: relative;
+    overflow: hidden;
+}
+
+.tech-card:hover,
+.tech-card:focus-within {
+    transform: translateY(-5px);
+    box-shadow: var(--card-shadow);
+    background-color: #fff;
+}
+
+.tech-card h4 {
+    font-size: 1.3rem;
+    color: var(--primary);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.tech-card .icon-background {
+    position: absolute;
+    right: -15px;
+    top: -15px;
+    font-size: 4rem;
+    opacity: 0.05;
+    color: var(--primary);
+}
+
+.tech-card .icon-container {
+    font-size: 1rem;
+    background: var(--primary);
+    color: white;
+    padding: 8px;
+    border-radius: 8px;
+}
+
+.tech-highlight {
+    margin-top: 15px;
+    background-color: rgba(192, 42, 42, 0.05);
+    padding: 12px;
+    border-left: 3px solid var(--primary);
+    font-size: 0.9rem;
+}
+
+.tech-transfer-footer {
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.tech-transfer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+@media (max-width: 768px) {
+    .tech-transfer-footer {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .tech-transfer-footer .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
 /* === TIMELINE STYLES === */
 dsm-timeline {
     display: block;
