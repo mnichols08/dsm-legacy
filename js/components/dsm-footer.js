@@ -94,7 +94,7 @@ class DsmFooter extends HTMLElement {
           gap: 1rem;
         }
         
-        .social-icon {
+        .social-icon, .social-icon:visited {
           width: 40px;
           height: 40px;
           border-radius: 50%;
@@ -103,6 +103,8 @@ class DsmFooter extends HTMLElement {
           align-items: center;
           justify-content: center;
           transition: all 0.3s ease;
+          color: white;
+          text-decoration: none;
         }
         
         .social-icon:hover {
@@ -144,7 +146,7 @@ class DsmFooter extends HTMLElement {
           margin-bottom: 0.8rem;
         }
         
-        .footer-links a {
+        .footer-links a, .footer-links a:visited {
           color: white;
           text-decoration: none;
           transition: all 0.3s ease;

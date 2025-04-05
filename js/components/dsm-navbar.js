@@ -124,6 +124,16 @@ class DsmNavbar extends HTMLElement {
           }
         }
         
+        /* Ensure consistent link styling in slotted navigation */
+        ::slotted(nav a), ::slotted(nav a:visited) {
+          color: white !important;
+          text-decoration: none;
+        }
+        
+        ::slotted(nav a:hover), ::slotted(nav a:focus) {
+          color: white !important;
+        }
+        
         /* High contrast mode support */
         @media (prefers-contrast: high) {
           .navbar {

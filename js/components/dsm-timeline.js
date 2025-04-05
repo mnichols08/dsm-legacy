@@ -26,7 +26,7 @@ class DsmTimeline extends HTMLElement {
           left: 0;
           right: 0;
           bottom: 0;
-          background: url('https://picsum.photos/id/133/1920/1080') center/cover no-repeat fixed;
+          background: url('images/longblock.jpg') center/cover no-repeat fixed;
           opacity: 0.05;
           z-index: 0;
         }
@@ -82,8 +82,9 @@ class DsmTimeline extends HTMLElement {
           bottom: 0;
           left: 50%;
           width: 4px;
-          margin-left: -2px;
+          margin-left: -4px;
           background-color: var(--primary, #c02a2a);
+          z-index: -2;
         }
         
         @media (max-width: 992px) {
@@ -139,30 +140,46 @@ class DsmTimeline extends HTMLElement {
   }
   
   connectedCallback() {
-    this.setupAnimation();
+    try {
+      this.setupAnimation();
+    } catch (error) {
+      console.error('Error in DsmTimeline connectedCallback:', error);
+    }
   }
   
   setupAnimation() {
     // Use Intersection Observer to animate timeline items as they scroll into view
-    setTimeout(() => {
-      const timelineItems = this.querySelectorAll('dsm-timeline-item');
-      
-      if (timelineItems.length && 'IntersectionObserver' in window) {
-        const observer = new IntersectionObserver((entries) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('show');
-              observer.unobserve(entry.target);
+    try {
+      setTimeout(() => {
+        const timelineItems = this.querySelectorAll('dsm-timeline-item');
+        
+        if (timelineItems.length && 'IntersectionObserver' in window) {
+          const observer = new IntersectionObserver((entries) => {
+            try {
+              entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                  entry.target.classList.add('show');
+                  observer.unobserve(entry.target);
+                }
+              });
+            } catch (error) {
+              console.error('Error in IntersectionObserver callback:', error);
+            }
+          }, { threshold: 0.2 });
+          
+          timelineItems.forEach(item => {
+            try {
+              item.classList.add('timeline-animation');
+              observer.observe(item);
+            } catch (error) {
+              console.error('Error observing timeline item:', error);
             }
           });
-        }, { threshold: 0.2 });
-        
-        timelineItems.forEach(item => {
-          item.classList.add('timeline-animation');
-          observer.observe(item);
-        });
-      }
-    }, 100);
+        }
+      }, 100);
+    } catch (error) {
+      console.error('Error in setupAnimation:', error);
+    }
   }
 }
 
@@ -199,9 +216,9 @@ class DsmTimelineItem extends HTMLElement {
         
         .item-content {
           position: relative;
-          width: 45%;
+          width: 43%;  /* Slightly reduced from 45% */
           margin-left: auto;
-          margin-right: 0;
+          margin-right: 7px; /* Add margin to create space */
           padding: 30px;
           background-color: white;
           border-radius: 10px;
@@ -210,7 +227,7 @@ class DsmTimelineItem extends HTMLElement {
         }
         
         :host(:nth-child(even)) .item-content {
-          margin-left: 0;
+          margin-left: 7px; /* Add margin to create space */
           margin-right: auto;
         }
         
@@ -235,7 +252,7 @@ class DsmTimelineItem extends HTMLElement {
           font-weight: 700;
           left: -35px;
           box-shadow: 0 5px 15px rgba(192, 42, 42, 0.3);
-          z-index: 5;
+          z-index: 10;
         }
         
         :host(:nth-child(even)) .year-marker {
@@ -245,19 +262,20 @@ class DsmTimelineItem extends HTMLElement {
         
         .dot {
           position: absolute;
-          top: 30px;
+          top: 20px;
           width: 20px;
           height: 20px;
           border-radius: 50%;
           background-color: var(--primary, #c02a2a);
           box-shadow: 0 0 0 4px var(--light, #f8f8f8);
-          left: -10px;
-          z-index: 1;
+          left: 50%;
+          transform: translateX(-50%);
+          z-index: 5;
         }
         
         :host(:nth-child(even)) .dot {
-          right: -10px;
-          left: auto;
+          left: 50%;
+          transform: translateX(-50%);
         }
         
         .item-title {
@@ -294,18 +312,25 @@ class DsmTimelineItem extends HTMLElement {
         
         @media (max-width: 992px) {
           .item-content {
-            width: calc(100% - 90px);
-            margin-left: 90px;
+            width: calc(100% - 130px); /* More space to prevent overflow */
+            margin-left: 80px; /* Increase margin to avoid timeline line */
             margin-right: 0;
           }
           
           :host(:nth-child(even)) .item-content {
-            margin-left: 90px;
+            margin-left: 80px;
             margin-right: 0;
+          }
+          
+          .timeline::before {
+            left: 40px;
           }
           
           .year-marker {
             left: 5px;
+            z-index: 10;
+            width: 60px; /* Slightly smaller on tablet */
+            height: 60px;
           }
           
           :host(:nth-child(even)) .year-marker {
@@ -314,12 +339,16 @@ class DsmTimelineItem extends HTMLElement {
           }
           
           .dot {
-            left: 30px;
+            left: 40px; /* Position dot directly on the timeline */
+            top: 25px; /* Better vertical alignment */
+            transform: translateX(-50%);
+            z-index: 5;
           }
           
           :host(:nth-child(even)) .dot {
-            left: 30px;
+            left: 40px;
             right: auto;
+            transform: translateX(-50%);
           }
           
           .item-content::after {
@@ -339,16 +368,42 @@ class DsmTimelineItem extends HTMLElement {
         @media (max-width: 576px) {
           .item-content {
             padding: 20px;
+            width: calc(100% - 110px); /* Adjust width for very small screens */
+            margin-left: 70px; /* Ensure content doesn't crowd the line */
+          }
+          
+          :host(:nth-child(even)) .item-content {
+            margin-left: 70px;
           }
           
           .year-marker {
-            width: 60px;
-            height: 60px;
-            font-size: 1rem;
+            width: 50px;
+            height: 50px;
+            font-size: 0.9rem;
+            left: 5px;
+          }
+          
+          :host(:nth-child(even)) .year-marker {
+            left: 5px;
+          }
+          
+          .dot {
+            display: block; /* Show dot on small screens */
+            left: 30px; /* Align with timeline line */
+            width: 16px; /* Slightly smaller */
+            height: 16px;
+          }
+          
+          :host(:nth-child(even)) .dot {
+            left: 30px;
           }
           
           .item-title {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
+          }
+          
+          .timeline::before {
+            left: 30px; /* Move timeline line slightly to the left on mobile */
           }
         }
       </style>
@@ -369,25 +424,33 @@ class DsmTimelineItem extends HTMLElement {
   }
   
   attributeChangedCallback(name, oldValue, newValue) {
-    if (oldValue === newValue) return;
-    
-    if (name === 'year') {
-      const yearMarker = this.shadowRoot.querySelector('.year-marker');
-      if (yearMarker) yearMarker.textContent = newValue;
-    }
-    
-    if (name === 'title') {
-      const titleEl = this.shadowRoot.querySelector('.item-title');
-      if (titleEl) titleEl.textContent = newValue;
+    try {
+      if (oldValue === newValue) return;
+      
+      if (name === 'year') {
+        const yearMarker = this.shadowRoot.querySelector('.year-marker');
+        if (yearMarker) yearMarker.textContent = newValue;
+      }
+      
+      if (name === 'title') {
+        const titleEl = this.shadowRoot.querySelector('.item-title');
+        if (titleEl) titleEl.textContent = newValue;
+      }
+    } catch (error) {
+      console.error('Error in DsmTimelineItem attributeChangedCallback:', error);
     }
   }
 }
 
-// Register components if not already registered
-if (!customElements.get('dsm-timeline-item')) {
-  customElements.define('dsm-timeline-item', DsmTimelineItem);
-}
+// Register components with error handling
+try {
+  if (!customElements.get('dsm-timeline-item')) {
+    customElements.define('dsm-timeline-item', DsmTimelineItem);
+  }
 
-if (!customElements.get('dsm-timeline')) {
-  customElements.define('dsm-timeline', DsmTimeline);
+  if (!customElements.get('dsm-timeline')) {
+    customElements.define('dsm-timeline', DsmTimeline);
+  }
+} catch (error) {
+  console.error('Error registering DSM Timeline components:', error);
 }

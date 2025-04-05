@@ -57,6 +57,21 @@ body {
     padding-top: 80px; /* Add space for fixed navbar */
 }
 
+/* Add consistent link colors - they remain the same color when visited */
+a {
+    color: var(--primary, #c02a2a);
+    text-decoration: none;
+    transition: var(--transition-medium);
+}
+
+a:visited {
+    color: var(--primary, #c02a2a); /* Same as default link color */
+}
+
+a:hover, a:focus {
+    color: var(--primary-dark, #941e1e);
+}
+
 /* Support for dsm-navbar component */
 dsm-navbar {
     display: block;
@@ -150,6 +165,10 @@ dsm-navbar {
     transition: var(--transition-medium);
     position: relative;
     padding: 5px 0;
+}
+
+.nav-links a:visited {
+    color: var(--white);
 }
 
 .nav-links a::after {
@@ -267,7 +286,8 @@ dsm-navbar {
     line-height: 1.7;
 }
 
-.btn {
+/* Button link styles - consistent colors */
+.btn, .btn:visited {
     display: inline-block;
     padding: 12px 30px;
     background-color: var(--primary);
@@ -440,7 +460,7 @@ dsm-navbar {
     left: 0;
     width: 100%;
     height: 100%;
-    background: url('https://picsum.photos/id/169/1920/1080') center/cover no-repeat fixed;
+    background: url('images/dsm_factory.jpg') center/cover no-repeat fixed;
     opacity: 0.15;
     z-index: 0;
 }
@@ -823,6 +843,95 @@ dsm-navbar {
     right: -10px;
 }
 
+/* Community Section Styles */
+.community-section {
+    padding: 100px 0;
+    background-color: var(--secondary);
+    color: var(--white);
+    position: relative;
+    overflow: hidden;
+}
+
+.community-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('https://picsum.photos/id/1072/1920/1080') center/cover no-repeat fixed;
+    opacity: 0.1;
+    z-index: 0;
+}
+
+.community-content {
+    position: relative;
+    z-index: 1;
+    padding: 0 5%;
+}
+
+.testimonials {
+    display: flex;
+    overflow-x: auto;
+    gap: 2rem;
+    padding: 2rem 0;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.testimonials::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+
+.testimonial {
+    flex: 0 0 350px;
+    scroll-snap-align: start;
+    background-color: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.testimonial-text {
+    font-style: italic;
+    margin-bottom: 1.5rem;
+    line-height: 1.7;
+}
+
+.testimonial-author {
+    display: flex;
+    align-items: center;
+}
+
+.author-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 15px;
+}
+
+.author-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.author-info h4 {
+    margin: 0 0 5px 0;
+    font-size: 1.1rem;
+    color: var(--accent);
+}
+
+.author-info p {
+    margin: 0;
+    font-size: 0.9rem;
+    opacity: 0.7;
+}
+
 /* Responsive adjustments */
 @media (max-width: 992px) {
     .engine-timeline::before {
@@ -896,348 +1005,6 @@ dsm-navbar {
     
     .specs-grid {
         grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-/* === COMMUNITY SECTION === */
-.community-section {
-    padding: 100px 5%;
-    position: relative;
-    background-color: var(--secondary-light);
-    color: var(--white);
-    overflow: hidden;
-}
-
-.community-bg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: url('https://picsum.photos/id/111/1920/1080') center/cover no-repeat fixed;
-    opacity: 0.15;
-    z-index: 0;
-}
-
-.community-content {
-    position: relative;
-    z-index: 1;
-    max-width: 1400px;
-    margin: 0 auto;
-}
-
-.community-section .section-title h2 {
-    color: var(--white);
-}
-
-.community-section .section-title p {
-    color: rgba(255, 255, 255, 0.8);
-}
-
-.testimonials {
-    display: flex;
-    gap: 2rem;
-    overflow-x: auto;
-    padding: 2rem 0;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
-}
-
-.testimonials::-webkit-scrollbar {
-    display: none;
-}
-
-.testimonial {
-    flex: 0 0 350px;
-    scroll-snap-align: start;
-    padding: 30px;
-    background-color: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border-radius: 10px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-}
-
-.testimonial-text {
-    font-style: italic;
-    margin-bottom: 1.5rem;
-    line-height: 1.7;
-}
-
-.testimonial-author {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.author-avatar {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background-color: #ddd;
-    overflow: hidden;
-}
-
-.author-avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.author-info h4 {
-    margin-bottom: 0.3rem;
-}
-
-.author-info p {
-    font-size: 0.9rem;
-    opacity: 0.7;
-}
-
-/* === GALLERY SECTION === */
-.gallery-section {
-    padding: 100px 5% 100px;
-    margin-bottom: 0;
-}
-
-/* === TECHNOLOGY TRANSFER CARDS === */
-.tech-card {
-    background-color: #f8f8f8;
-    border-radius: 10px;
-    padding: 25px;
-    transition: var(--transition-medium);
-    position: relative;
-    overflow: hidden;
-}
-
-.tech-card:hover,
-.tech-card:focus-within {
-    transform: translateY(-5px);
-    box-shadow: var(--card-shadow);
-    background-color: #fff;
-}
-
-.tech-card h4 {
-    font-size: 1.3rem;
-    color: var(--primary);
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.tech-card .icon-background {
-    position: absolute;
-    right: -15px;
-    top: -15px;
-    font-size: 4rem;
-    opacity: 0.05;
-    color: var(--primary);
-}
-
-.tech-card .icon-container {
-    font-size: 1rem;
-    background: var(--primary);
-    color: white;
-    padding: 8px;
-    border-radius: 8px;
-}
-
-.tech-highlight {
-    margin-top: 15px;
-    background-color: rgba(192, 42, 42, 0.05);
-    padding: 12px;
-    border-left: 3px solid var(--primary);
-    font-size: 0.9rem;
-}
-
-.tech-transfer-footer {
-    margin-top: 2.5rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid #eee;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 1rem;
-}
-
-.tech-transfer-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
-}
-
-@media (max-width: 768px) {
-    .tech-transfer-footer {
-        flex-direction: column;
-        text-align: center;
-    }
-    
-    .tech-transfer-footer .btn {
-        width: 100%;
-        justify-content: center;
-    }
-}
-
-/* === TIMELINE STYLES === */
-dsm-timeline {
-    display: block;
-    width: 100%;
-}
-
-dsm-timeline-item {
-    display: block;
-}
-
-dsm-timeline-item.timeline-animation {
-    will-change: opacity, transform;
-}
-
-/* === FOOTER SPACER === */
-.footer-spacer {
-    height: 150px;
-    background: linear-gradient(to bottom, var(--light) 0%, rgba(248, 248, 248, 0.8) 100%);
-    position: relative;
-}
-
-.footer-spacer::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 20px;
-    background-color: var(--primary);
-    clip-path: polygon(0 100%, 100% 100%, 50% 0);
-    transform: translateY(10px);
-}
-
-/* === FOOTER === */
-dsm-footer {
-    display: block;
-    margin-top: 0 !important;
-}
-
-/* === BACK TO TOP === */
-dsm-back-to-top {
-    display: block;
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    z-index: 99;
-}
-
-/* === RESPONSIVE === */
-@media (max-width: 1200px) {
-    .section-title h2 {
-        font-size: 2.2rem;
-    }
-}
-
-@media (max-width: 992px) {
-    .section {
-        padding: 80px 5%;
-    }
-    
-    .about-content, .legacy-content {
-        gap: 3rem;
-    }
-    
-    .nav-links a {
-        margin-left: 1.5rem;
-    }
-}
-
-@media (max-width: 768px) {
-    .section {
-        padding: 60px 5%;
-    }
-    
-    .section-title h2 {
-        font-size: 1.8rem;
-    }
-    
-    .section-title p {
-        font-size: 0.95rem;
-    }
-    
-    .vehicle-cards {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-    }
-    
-    .factory-card h3 {
-        font-size: 1.3rem;
-    }
-    
-    .testimonials {
-        padding: 1rem 0;
-    }
-    
-    .testimonial {
-        flex: 0 0 85%;
-        padding: 20px;
-    }
-    
-    /* Only add the button styles on mobile */
-    .btn {
-        display: block;
-        text-align: center;
-        width: 100%;
-        max-width: 300px;
-        margin: 0 auto;
-    }
-    
-    .about-text .btn, .legacy-text .btn {
-        margin: 0;
-    }
-}
-
-@media (max-width: 576px) {
-    body {
-        font-size: 15px;
-    }
-    
-    .logo-text h1 {
-        font-size: 0.9rem;
-    }
-    
-    .logo-text span {
-        font-size: 0.6rem;
-    }
-    
-    .logo-symbol {
-        width: 40px;
-        height: 40px;
-    }
-    
-    .diamond {
-        width: 30px;
-        height: 30px;
-        top: 5px;
-        left: 5px;
-    }
-    
-    .star {
-        font-size: 18px;
-    }
-    
-    .legacy-images {
-        grid-template-columns: 1fr;
-    }
-    
-    .legacy-image:first-child {
-        grid-column: span 1;
-    }
-    
-    .btn {
-        padding: 10px 20px;
-        font-size: 0.9rem;
-    }
-    
-    /* Only on very small screens, make single column */
-    .gallery-grid {
-        grid-template-columns: 1fr;
-        grid-auto-rows: 250px;
     }
 }
 
@@ -1404,4 +1171,16 @@ dsm-back-to-top {
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
     }
+}
+
+/* Footer link styles - consistent colors */
+.footer-links a, .footer-links a:visited {
+    color: white;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.footer-social a, .footer-social a:visited {
+    color: white;
 }

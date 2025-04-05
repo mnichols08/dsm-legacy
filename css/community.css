@@ -1,0 +1,85 @@
+/* Community Section Specific Styles */
+
+/* Testimonial arrows */
+.testimonial-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    transition: all 0.3s ease;
+}
+
+.testimonial-arrow:hover {
+    background: var(--primary);
+}
+
+.testimonial-arrow-left {
+    left: 20px;
+}
+
+.testimonial-arrow-right {
+    right: 20px;
+}
+
+/* Additional mobile styles */
+@media (max-width: 992px) {
+    .testimonial {
+        flex: 0 0 80%;
+    }
+}
+
+@media (max-width: 768px) {
+    .testimonial-arrow {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+    
+    .testimonial-arrow-left {
+        left: 10px;
+    }
+    
+    .testimonial-arrow-right {
+        right: 10px;
+    }
+}
+
+/* Fix testimonial author links */
+.testimonial-author a,
+.testimonial-author a:visited {
+    color: var(--accent);
+    text-decoration: none;
+}
+
+.testimonial-author a:hover,
+.testimonial-author a:focus {
+    color: var(--accent-dark);
+    text-decoration: underline;
+}
+
+/* Touch feedback for testimonial navigation on mobile */
+@media (hover: none) {
+    .testimonial {
+        scroll-snap-align: center;
+    }
+    
+    .testimonial-arrow {
+        opacity: 0.7;
+    }
+    
+    .testimonial-arrow:active {
+        background: var(--primary);
+        opacity: 1;
+    }
+}

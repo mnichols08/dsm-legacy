@@ -199,6 +199,44 @@ function initCommunitySection() {
 }
 
 /**
+ * DSM App - Main application script
+ * Handles testimonial scrolling and community section functionality
+ */
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize testimonials scrolling
+    initTestimonials();
+});
+
+function initTestimonials() {
+    const testimonials = document.querySelector('.testimonials');
+    if (!testimonials) return;
+    
+    // Add arrow navigation for desktop
+    const leftArrow = document.createElement('button');
+    leftArrow.className = 'testimonial-arrow testimonial-arrow-left';
+    leftArrow.innerHTML = '<i class="fas fa-chevron-left"></i>';
+    leftArrow.setAttribute('aria-label', 'Previous testimonial');
+    
+    const rightArrow = document.createElement('button');
+    rightArrow.className = 'testimonial-arrow testimonial-arrow-right';
+    rightArrow.innerHTML = '<i class="fas fa-chevron-right"></i>';
+    rightArrow.setAttribute('aria-label', 'Next testimonial');
+    
+    testimonials.parentNode.appendChild(leftArrow);
+    testimonials.parentNode.appendChild(rightArrow);
+    
+    // Navigate testimonials
+    leftArrow.addEventListener('click', () => {
+        testimonials.scrollBy({ left: -370, behavior: 'smooth' });
+    });
+    
+    rightArrow.addEventListener('click', () => {
+        testimonials.scrollBy({ left: 370, behavior: 'smooth' });
+    });
+}
+
+/**
  * Initialize the legacy section
  */
 function initLegacySection() {

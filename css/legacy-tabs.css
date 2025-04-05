@@ -75,6 +75,19 @@
     min-width: 300px;
 }
 
+/* Ensure consistent link styling in tab content */
+.legacy-text a, .legacy-text a:visited {
+  color: var(--primary);
+  font-weight: bold;
+  text-decoration: none;
+  transition: var(--transition-medium);
+}
+
+.legacy-text a:hover, .legacy-text a:focus {
+  color: var(--primary-dark);
+  text-decoration: underline;
+}
+
 .legacy-images {
     flex: 2;
     min-width: 300px;
