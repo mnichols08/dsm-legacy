@@ -502,69 +502,401 @@ dsm-navbar {
     line-height: 1.7;
 }
 
-/* === LEGACY SECTION === */
+/* === LEGACY SECTION - ENHANCED === */
 .legacy-section {
     padding: 100px 5%;
     background-color: var(--light);
 }
 
-.legacy-content {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4rem;
-    justify-content: center;
-    align-items: center;
+/* Legacy Tabs Navigation */
+.legacy-tabs-container {
     max-width: 1400px;
     margin: 0 auto;
 }
 
-.legacy-text {
-    flex: 1;
-    min-width: 300px;
+.legacy-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
 }
 
-.legacy-text h3 {
+.legacy-tab {
+    padding: 12px 20px;
+    background: transparent;
+    border: 2px solid var(--secondary);
+    border-radius: 30px;
+    color: var(--secondary);
+    font-weight: 700;
+    font-family: var(--heading-font);
+    cursor: pointer;
+    transition: var(--transition-medium);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.9rem;
+}
+
+.legacy-tab:hover {
+    background-color: var(--secondary-light);
+    color: var(--white);
+}
+
+.legacy-tab.active {
+    background-color: var(--secondary);
+    color: var(--white);
+}
+
+/* Tab Content Container */
+.legacy-content-container {
+    position: relative;
+}
+
+.legacy-tab-content {
+    display: none;
+    animation: fadeIn 0.5s ease forwards;
+}
+
+.legacy-tab-content.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Technical Legacy Cards */
+.legacy-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.legacy-card {
+    background-color: var(--white);
+    border-radius: 15px;
+    box-shadow: var(--card-shadow);
+    padding: 2rem;
+    transition: var(--transition-medium);
+    position: relative;
+    overflow: hidden;
+}
+
+.legacy-card:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--hover-shadow);
+}
+
+.legacy-card-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--gradient);
+    color: var(--white);
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.legacy-card h3 {
+    font-size: 1.6rem;
+    margin-bottom: 1rem;
+    color: var(--secondary);
+    font-family: var(--heading-font);
+}
+
+.legacy-card p {
+    margin-bottom: 1rem;
+    line-height: 1.7;
+}
+
+/* Engine Heritage Timeline */
+.engine-heritage {
+    padding: 2rem;
+    background-color: var(--white);
+    border-radius: 15px;
+    box-shadow: var(--card-shadow);
+}
+
+.engine-intro {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto 3rem;
+}
+
+.engine-intro h3 {
     font-size: 2rem;
     margin-bottom: 1.5rem;
     color: var(--secondary);
     font-family: var(--heading-font);
 }
 
-.legacy-text p {
+.engine-timeline {
+    position: relative;
+    max-width: 1000px;
+    margin: 0 auto 3rem;
+    padding: 2rem 0;
+}
+
+.engine-timeline::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 4px;
+    margin-left: -2px;
+    background-color: var(--primary);
+}
+
+.engine-timeline-item {
+    position: relative;
+    margin-bottom: 3rem;
+    display: flex;
+    align-items: center;
+}
+
+.engine-timeline-item:last-child {
+    margin-bottom: 0;
+}
+
+.engine-year {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    text-align: center;
+    padding: 0.5rem 1rem;
+    background-color: var(--primary);
+    color: var(--white);
+    border-radius: 30px;
+    font-weight: 700;
+    font-family: var(--heading-font);
+    z-index: 2;
+}
+
+.engine-detail {
+    width: 42%;
+    padding: 1.5rem;
+    background-color: var(--light);
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.engine-timeline-item:nth-child(odd) .engine-detail {
+    margin-left: auto;
+    margin-right: 8%;
+}
+
+.engine-timeline-item:nth-child(even) .engine-detail {
+    margin-right: auto;
+    margin-left: 8%;
+}
+
+.engine-detail h4 {
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+    color: var(--primary);
+    font-family: var(--heading-font);
+}
+
+/* Engine Specs Grid */
+.engine-specs {
+    background-color: var(--secondary);
+    color: var(--white);
+    padding: 2rem;
+    border-radius: 10px;
+}
+
+.engine-specs h3 {
+    font-size: 1.6rem;
     margin-bottom: 1.5rem;
+    color: var(--white);
+    font-family: var(--heading-font);
+    text-align: center;
+}
+
+.specs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1.5rem;
+}
+
+.spec-item {
+    text-align: center;
+}
+
+.spec-title {
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--accent);
+}
+
+.spec-value {
+    font-size: 1.2rem;
+}
+
+/* Global Impact Section */
+.global-impact {
+    padding: 2rem;
+}
+
+.global-impact h3 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: var(--secondary);
+    font-family: var(--heading-font);
+    text-align: center;
+}
+
+.impact-intro {
+    max-width: 800px;
+    margin: 0 auto 3rem;
+    text-align: center;
+    font-size: 1.1rem;
     line-height: 1.7;
 }
 
-.legacy-images {
-    flex: 1;
-    min-width: 300px;
+.impact-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
 }
 
-.legacy-image {
-    position: relative;
+.impact-card {
+    background-color: var(--white);
     border-radius: 10px;
-    overflow: hidden;
     box-shadow: var(--card-shadow);
-    height: 200px;
+    padding: 1.5rem;
+    transition: var(--transition-medium);
 }
 
-.legacy-image:first-child {
-    grid-column: span 2;
-    height: 300px;
+.impact-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--hover-shadow);
 }
 
-.legacy-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: var(--transition-slow);
+.impact-card h4 {
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+    color: var(--primary);
+    font-family: var(--heading-font);
+    border-bottom: 2px solid var(--light-gray);
+    padding-bottom: 0.5rem;
 }
 
-.legacy-image:hover img {
-    transform: scale(1.1);
+.quote-container {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.quote-container blockquote {
+    font-size: 1.2rem;
+    font-style: italic;
+    line-height: 1.7;
+    color: var(--secondary);
+    position: relative;
+    padding: 0 2rem;
+}
+
+.quote-container blockquote::before,
+.quote-container blockquote::after {
+    content: '"';
+    font-size: 3rem;
+    color: var(--primary);
+    opacity: 0.3;
+    position: absolute;
+}
+
+.quote-container blockquote::before {
+    top: -20px;
+    left: -10px;
+}
+
+.quote-container blockquote::after {
+    bottom: -40px;
+    right: -10px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .engine-timeline::before {
+        left: 30px;
+    }
+    
+    .engine-year {
+        left: 30px;
+        transform: none;
+    }
+    
+    .engine-detail {
+        width: 80%;
+        margin-left: 80px !important;
+        margin-right: 0 !important;
+    }
+    
+    .legacy-tabs {
+        gap: 0.5rem;
+    }
+    
+    .legacy-tab {
+        padding: 10px 15px;
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .impact-card,
+    .legacy-card {
+        padding: 1.5rem;
+    }
+    
+    .engine-heritage {
+        padding: 1.5rem;
+    }
+    
+    .engine-timeline-item {
+        margin-bottom: 2.5rem;
+    }
+    
+    .engine-intro h3,
+    .global-impact h3 {
+        font-size: 1.6rem;
+    }
+    
+    .impact-intro {
+        font-size: 1rem;
+    }
+    
+    .quote-container blockquote {
+        font-size: 1.1rem;
+        padding: 0 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .legacy-tab {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+    
+    .legacy-tabs {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .engine-detail {
+        width: calc(100% - 80px);
+    }
+    
+    .specs-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 /* === COMMUNITY SECTION === */

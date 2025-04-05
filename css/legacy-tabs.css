@@ -1,0 +1,139 @@
+/* Legacy Tabs Specific Styling */
+
+.legacy-section {
+    padding: 100px 5%;
+    background-color: var(--light);
+}
+
+/* Legacy Tabs Navigation */
+.legacy-tabs-container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.legacy-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+}
+
+.legacy-tab {
+    padding: 12px 20px;
+    background: transparent;
+    border: 2px solid var(--secondary);
+    border-radius: 30px;
+    color: var(--secondary);
+    font-weight: 700;
+    font-family: var(--heading-font);
+    cursor: pointer;
+    transition: var(--transition-medium);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.9rem;
+}
+
+.legacy-tab:hover {
+    background-color: var(--secondary-light);
+    color: var(--white);
+}
+
+.legacy-tab.active {
+    background-color: var(--secondary);
+    color: var(--white);
+}
+
+/* Tab Content Container */
+.legacy-content-container {
+    position: relative;
+}
+
+.legacy-tab-content {
+    display: none;
+    animation: fadeIn 0.5s ease forwards;
+}
+
+.legacy-tab-content.active {
+    display: block !important; /* !important to override inline styles */
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Legacy Content Structure */
+.legacy-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+}
+
+.legacy-text {
+    flex: 3;
+    min-width: 300px;
+}
+
+.legacy-images {
+    flex: 2;
+    min-width: 300px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 1rem;
+}
+
+.legacy-image {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.legacy-image:first-child {
+    grid-column: span 2;
+}
+
+.legacy-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.legacy-image:hover img {
+    transform: scale(1.05);
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .legacy-tabs {
+        gap: 0.5rem;
+    }
+    
+    .legacy-tab {
+        padding: 10px 15px;
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .legacy-images {
+        grid-template-columns: 1fr;
+    }
+    
+    .legacy-image:first-child {
+        grid-column: span 1;
+    }
+}
+
+@media (max-width: 576px) {
+    .legacy-tab {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+    
+    .legacy-tabs {
+        flex-direction: column;
+        width: 100%;
+    }
+}
