@@ -942,266 +942,257 @@ r {
 .author-info h4 {
     margin: 0 0 5px 0;9rem;
     font-size: 1.1rem;   opacity: 0.7;
-    color: var(--accent);}
-}
-/
-.author-info p {
-    margin: 0;e::before {
-    font-size: 0.9rem;   left: 30px;
-    opacity: 0.7;}
 }
 
 /* Responsive adjustments */
-@media (max-width: 992px) {   transform: none;
-    .engine-timeline::before {}
+@media (max-width: 992px) {
+    .engine-timeline::before {
         left: 30px;
-    }{
-    
-    .engine-year {t;
-        left: 30px;   margin-right: 0 !important;
-        transform: none;}
     }
     
-    .engine-detail {   gap: 0.5rem;
-        width: 80%;}
+    .engine-year {
+        left: 30px;
+        transform: none;
+    }
+    
+    .engine-detail {
+        width: 80%;
         margin-left: 80px !important;
         margin-right: 0 !important;
-    };
-       font-size: 0.8rem;
-    .legacy-tabs {   }
-        gap: 0.5rem;}
     }
-    : 768px) {
+    
+    .legacy-tabs {
+        gap: 0.5rem;
+    }
+    
     .legacy-tab {
         padding: 10px 15px;
-        font-size: 0.8rem;   padding: 1.5rem;
-    }}
+        font-size: 0.8rem;
+    }
 }
 
-@media (max-width: 768px) {   padding: 1.5rem;
-    .impact-card,}
+@media (max-width: 768px) {
+    .impact-card,
     .legacy-card {
         padding: 1.5rem;
-    }   margin-bottom: 2.5rem;
     }
+    
     .engine-heritage {
         padding: 1.5rem;
     }
-       font-size: 1.6rem;
-    .engine-timeline-item {}
+    
+    .engine-timeline-item {
         margin-bottom: 2.5rem;
     }
-       font-size: 1rem;
-    .engine-intro h3,}
+    
+    .engine-intro h3,
     .global-impact h3 {
-        font-size: 1.6rem;quote {
-    }m;
-       padding: 0 1rem;
-    .impact-intro {   }
-        font-size: 1rem;}
+        font-size: 1.6rem;
     }
-    : 576px) {
+    
+    .impact-intro {
+        font-size: 1rem;
+    }
+    
     .quote-container blockquote {
         font-size: 1.1rem;
-        padding: 0 1rem;   margin-bottom: 0.5rem;
-    }}
+        padding: 0 1rem;
+    }
 }
 
-@media (max-width: 576px) {on: column;
-    .legacy-tab {   width: 100%;
-        width: 100%;}
+@media (max-width: 576px) {
+    .legacy-tab {
+        width: 100%;
         margin-bottom: 0.5rem;
     }
-       width: calc(100% - 80px);
-    .legacy-tabs {}
+    
+    .legacy-tabs {
         flex-direction: column;
         width: 100%;
-    }   grid-template-columns: repeat(2, 1fr);
-       }
-    .engine-detail {}
+    }
+    
+    .engine-detail {
         width: calc(100% - 80px);
     }
-    er touch targets for mobile */
-    .specs-grid {inks a, 
+    
+    .specs-grid {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
-@media (max-width: 480px) {; /* Minimum Apple recommended touch target size */
-    /* Ensure proper touch targets for mobile */   min-width: 44px;
-    .nav-links a, }
+@media (max-width: 480px) {
+    /* Ensure proper touch targets for mobile */
+    .nav-links a, 
     .btn, 
-    .social-icon,  {
+    .social-icon, 
     .gallery-item,
-    .scroll-indicator {   font-size: 1.8rem;
-        min-height: 44px; /* Minimum Apple recommended touch target size */}
+    .scroll-indicator {
+        min-height: 44px; /* Minimum Apple recommended touch target size */
         min-width: 44px;
     }
-       height: 90vh; /* Slightly shorter on small devices */
-    .scroll-indicator {}
+    
+    .scroll-indicator {
         bottom: 15px;
         font-size: 1.8rem;
-    } /* Almost full width on very small screens */
-       padding: 15px;
-    .hero {}
-        height: 90vh; /* Slightly shorter on small devices */
-    }djust spacing for better mobile reading */
+    }
     
-    .testimonial {   margin-bottom: 0.8rem;
-        flex: 0 0 90%; /* Almost full width on very small screens */}
+    .hero {
+        height: 90vh; /* Slightly shorter on small devices */
+    }
+    
+    .testimonial {
+        flex: 0 0 90%; /* Almost full width on very small screens */
         padding: 15px;
     }
-       margin-bottom: 1.2rem;
-    /* Adjust spacing for better mobile reading */}
+    
+    /* Adjust spacing for better mobile reading */
     h3 {
-        margin-bottom: 0.8rem;rride button styles for mobile */
+        margin-bottom: 0.8rem;
     }
     
-    p {center;
+    p {
         margin-bottom: 1.2rem;
-    }x;
-       margin: 0 auto;
-    /* Override button styles for mobile */}
+    }
+    
+    /* Override button styles for mobile */
     .btn {
-        display: block;tn, .legacy-text .btn {
-        text-align: center;   margin: 0;
-        width: 100%;   }
-        max-width: 300px;}
+        display: block;
+        text-align: center;
+        width: 100%;
+        max-width: 300px;
         margin: 0 auto;
     }
-    card height on desktop */
+    
     .about-text .btn, .legacy-text .btn {
-        margin: 0;   height: 500px !important; /* Ensure consistent height on desktop */
-    }}
-}
-/
-@media (min-width: 769px) {egacy-content {
-    /* Fix vehicle card height on desktop */
-    .vehicle-card {   flex-wrap: wrap;
-        height: 500px !important; /* Ensure consistent height on desktop */}
+        margin: 0;
     }
-    tore button styles on desktop */
+}
+
+@media (min-width: 769px) {
+    /* Fix vehicle card height on desktop */
+    .vehicle-card {
+        height: 500px !important; /* Ensure consistent height on desktop */
+    }
+    
     /* Keep desktop flexbox layouts */
-    .about-content, .legacy-content {ine-block;
+    .about-content, .legacy-content {
         display: flex;
         flex-wrap: wrap;
-    }   margin: initial;
     }
+    
     /* Restore button styles on desktop */
-    .btn {text .btn {
-        display: inline-block;ine-block;
-        width: auto;   width: auto;
-        max-width: none;}
-        margin: initial;
-    }e cards are in a grid on desktop */
-    
-    .about-text .btn, .legacy-text .btn {   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)) !important;
-        display: inline-block;}
+    .btn {
+        display: inline-block;
         width: auto;
-    } should remain wide on desktop */
-    
-    /* Ensure vehicle cards are in a grid on desktop */o-fit, minmax(300px, 1fr)) !important;
-    .vehicle-cards {   grid-auto-rows: 300px !important;
-        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)) !important;}
+        max-width: none;
+        margin: initial;
     }
-    p */
-    /* Gallery grid should remain wide on desktop */hild(3n+1)) {
-    .gallery-grid {   grid-row: span 2 !important;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;}
+    
+    .about-text .btn, .legacy-text .btn {
+        display: inline-block;
+        width: auto;
+    }
+    
+    /* Ensure vehicle cards are in a grid on desktop */
+    .vehicle-cards {
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)) !important;
+    }
+    
+    /* Gallery grid should remain wide on desktop */
+    .gallery-grid {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
         grid-auto-rows: 300px !important;
-    }ry grid remains wide */
-    
-    /* Ensure proper gallery item spans on desktop */   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)) !important;
-    ::slotted(dsm-gallery-item:nth-child(3n+1)) {}
-        grid-row: span 2 !important;
-    }onials at proper width */
-    
-    /* Ensure factory grid remains wide */   flex: 0 0 350px !important;
-    .factory-grid {   }
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)) !important;}
     }
-    fe areas */
-    /* Keep testimonials at proper width */) {
+    
+    /* Ensure proper gallery item spans on desktop */
+    ::slotted(dsm-gallery-item:nth-child(3n+1)) {
+        grid-row: span 2 !important;
+    }
+    
+    /* Ensure factory grid remains wide */
+    .factory-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)) !important;
+    }
+    
+    /* Keep testimonials at proper width */
     .testimonial {
         flex: 0 0 350px !important;
-    }   padding-right: max(5%, env(safe-area-inset-right));
-}}
+    }
+}
 
 /* Handle notched phones and safe areas */
-@supports (padding: max(0px)) {);
-    body, .navbar, .footer {   right: max(30px, env(safe-area-inset-right, 30px));
-        padding-left: max(5%, env(safe-area-inset-left));}
+@supports (padding: max(0px)) {
+    body, .navbar, .footer {
+        padding-left: max(5%, env(safe-area-inset-left));
         padding-right: max(5%, env(safe-area-inset-right));
-    } on desktop */
-    
-    .back-to-top, dsm-back-to-top {, .footer {
-        bottom: max(30px, env(safe-area-inset-bottom, 30px));   padding:0
-        right: max(30px, env(safe-area-inset-right, 30px));}
     }
-    -back-to-top {
-    /* Remove safe area padding on desktop */;
-    @media (min-width: 992px) {   right: 30px;
-        body, .navbar, .footer {   }
-            padding:0   }
-        }}
-        
-        .back-to-top, dsm-back-to-top {ESSIBILITY ENHANCEMENTS === */
-            bottom: 30px;
-            right: 30px;bsolute;
+    
+    .back-to-top, dsm-back-to-top {
+        bottom: max(30px, env(safe-area-inset-bottom, 30px));
+        right: max(30px, env(safe-area-inset-right, 30px));
+    }
+    
+    /* Remove safe area padding on desktop */
+    @media (min-width: 992px) {
+        body, .navbar, .footer {
+            padding:0
         }
-    };
+        
+        .back-to-top, dsm-back-to-top {
+            bottom: 30px;
+            right: 30px;
+        }
+    }
 }
 
 /* === ACCESSIBILITY ENHANCEMENTS === */
-.sr-only {0);
-    position: absolute;rap;
-    width: 1px;   border-width: 0;
-    height: 1px;}
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
     padding: 0;
-    margin: -1px; */
-    overflow: hidden;fers-contrast: high) {
+    margin: -1px;
+    overflow: hidden;
     clip: rect(0, 0, 0, 0);
     white-space: nowrap;
-    border-width: 0;40;
-}   --accent: #e29300;
+    border-width: 0;
 }
+
 /* Add high contrast mode support */
 @media (prefers-contrast: high) {
-    :root {   border: 2px solid black;
-        --primary: #b01010;}
+    :root {
+        --primary: #b01010;
         --secondary: #1d1d40;
         --accent: #e29300;
-    }   text-decoration: underline;
-       }
-    .btn {}
+    }
+    
+    .btn {
         border: 2px solid black;
     }
-    (prefers-reduced-motion: reduce) {
+    
     .nav-links a {
         text-decoration: underline;
-    };
-}rtant;
-   scroll-behavior: auto !important;
-/* Ensure reduced motion is respected */   }
-@media (prefers-reduced-motion: reduce) {}
+    }
+}
+
+/* Ensure reduced motion is respected */
+@media (prefers-reduced-motion: reduce) {
     * {
-        animation-duration: 0.01ms !important;*/
-        animation-iteration-count: 1 !important;.footer-links a:visited {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
-    }ase;
-}   display: inline-block;
+    }
 }
+
 /* Footer link styles - consistent colors */
-.footer-links a, .footer-links a:visited { .footer-social a:visited {
-    color: white;   color: white;
-    text-decoration: none;}
+.footer-links a, .footer-links a:visited {
+    color: white;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
 
-
-
-
-
-
-
-
-}    color: white;.footer-social a, .footer-social a:visited {}    display: inline-block;    transition: all 0.3s ease;
+.footer-social a, .footer-social a:visited {
+    color: white;
+}
