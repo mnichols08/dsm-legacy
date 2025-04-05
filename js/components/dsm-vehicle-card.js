@@ -1,3 +1,8 @@
+/**
+ * DSM Vehicle Card Component
+ * A styled card for displaying vehicle information with image, details, and specs
+ */
+
 class DsmVehicleCard extends HTMLElement {
   constructor() {
     super();
@@ -5,6 +10,8 @@ class DsmVehicleCard extends HTMLElement {
     
     this.shadowRoot.innerHTML = `
       <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Roboto:wght@300;400;500;700&display=swap');
+        
         :host {
           display: block;
         }
@@ -13,16 +20,17 @@ class DsmVehicleCard extends HTMLElement {
           position: relative;
           border-radius: 15px;
           overflow: hidden;
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
           transition: all 0.5s ease;
           cursor: pointer;
-          height: 500px; /* Fixed height for desktop */
+          height: 500px;
+          background-color: var(--dark, #121212);
         }
         
         .vehicle-card:hover,
         .vehicle-card:focus-within {
           transform: translateY(-10px);
-          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+          box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
         }
         
         .vehicle-image {
@@ -31,7 +39,6 @@ class DsmVehicleCard extends HTMLElement {
           left: 0;
           width: 100%;
           height: 100%;
-          background-color: #1a1a1a;
         }
         
         .vehicle-image img {
@@ -53,7 +60,7 @@ class DsmVehicleCard extends HTMLElement {
           left: 0;
           width: 100%;
           padding: 30px;
-          background: linear-gradient(to top, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.7) 50%, transparent);
+          background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
           color: white;
           transform: translateY(calc(100% - 100px));
           transition: all 0.5s ease;
@@ -79,7 +86,7 @@ class DsmVehicleCard extends HTMLElement {
           left: 0;
           width: 50px;
           height: 3px;
-          background-color: #f0b000;
+          background-color: var(--primary, #c02a2a);
           transition: width 0.3s ease;
         }
         
@@ -90,9 +97,8 @@ class DsmVehicleCard extends HTMLElement {
         
         .vehicle-years {
           font-size: 0.9rem;
-          opacity: 0.9;
+          opacity: 0.7;
           margin-bottom: 1rem;
-          color: #f0b000;
         }
         
         .vehicle-desc {
@@ -130,60 +136,50 @@ class DsmVehicleCard extends HTMLElement {
         .spec-value {
           font-size: 1.3rem;
           font-weight: 700;
-          color: #f0b000;
+          color: var(--primary, #c02a2a);
         }
         
         .spec-label {
           font-size: 0.8rem;
-          opacity: 0.9;
-          color: white;
+          opacity: 0.7;
         }
         
-        /* Accessibility improvements */
-        .vehicle-card:focus {
-          outline: none;
-        }
-        
-        .vehicle-card.keyboard-focus {
-          outline: 3px solid #f0b000;
-          outline-offset: 3px;
-        }
-        
-        @media (prefers-reduced-motion: reduce) {
-          * {
-            animation-duration: 0.01ms !important;
-            animation-iteration-count: 1 !important;
-            transition-duration: 0.01ms !important;
-          }
-        }
-        
-        /* Mobile adjustments - use max-width to avoid affecting desktop */
         @media (max-width: 768px) {
           .vehicle-card {
             height: auto;
             min-height: 450px;
           }
+          
+          .vehicle-overlay {
+            padding: 20px;
+          }
+          
+          .vehicle-title {
+            font-size: 1.6rem;
+          }
         }
         
-        /* Explicitly set desktop heights */
-        @media (min-width: 769px) {
-          .vehicle-card {
-            height: 500px !important;
+        @media (prefers-reduced-motion: reduce) {
+          .vehicle-card, .vehicle-image img, .vehicle-overlay, .vehicle-desc, .vehicle-specs {
+            transition: none !important;
+          }
+          
+          .vehicle-card:hover .vehicle-image img,
+          .vehicle-card:focus-within .vehicle-image img {
+            transform: none;
           }
         }
       </style>
       
-      <div class="vehicle-card" tabindex="0" role="article" aria-labelledby="vehicle-title">
+      <div class="vehicle-card">
         <div class="vehicle-image">
-          <img src="" alt="">
+          <img src="" alt="Vehicle Image">
         </div>
         <div class="vehicle-overlay">
-          <h3 class="vehicle-title" id="vehicle-title"></h3>
+          <h3 class="vehicle-title"></h3>
           <p class="vehicle-years"></p>
           <p class="vehicle-desc"></p>
-          <div class="vehicle-specs">
-            <!-- Specs will be dynamically inserted here -->
-          </div>
+          <div class="vehicle-specs"></div>
         </div>
       </div>
     `;
@@ -195,11 +191,10 @@ class DsmVehicleCard extends HTMLElement {
   
   connectedCallback() {
     this.updateContent();
-    this.setupEventListeners();
-    this.setupKeyboardAccessibility();
   }
   
   attributeChangedCallback(name, oldValue, newValue) {
+    if (oldValue === newValue) return;
     this.updateContent();
   }
   
@@ -214,126 +209,47 @@ class DsmVehicleCard extends HTMLElement {
     const titleElement = this.shadowRoot.querySelector('.vehicle-title');
     const yearsElement = this.shadowRoot.querySelector('.vehicle-years');
     const descElement = this.shadowRoot.querySelector('.vehicle-desc');
-    const specsContainer = this.shadowRoot.querySelector('.vehicle-specs');
-    const cardElement = this.shadowRoot.querySelector('.vehicle-card');
+    const specsElement = this.shadowRoot.querySelector('.vehicle-specs');
     
     if (image) {
       imageElement.src = image;
       imageElement.alt = title || 'Vehicle Image';
     }
     
-    if (title) {
-      titleElement.textContent = title;
-      cardElement.setAttribute('aria-label', `${title} - ${years || ''}`);
-    }
-    
+    if (title) titleElement.textContent = title;
     if (years) yearsElement.textContent = years;
     if (description) descElement.textContent = description;
     
+    // Handle specs as JSON
     if (specs) {
       try {
-        const specsArray = JSON.parse(specs);
-        specsContainer.innerHTML = '';
+        const specsData = JSON.parse(specs);
+        specsElement.innerHTML = '';
         
-        specsArray.forEach(spec => {
-          const specElement = document.createElement('div');
-          specElement.className = 'spec';
-          specElement.innerHTML = `
-            <div class="spec-value">${spec.value}</div>
-            <div class="spec-label">${spec.label}</div>
-          `;
-          specsContainer.appendChild(specElement);
+        specsData.forEach(spec => {
+          const specEl = document.createElement('div');
+          specEl.className = 'spec';
+          
+          const valueEl = document.createElement('div');
+          valueEl.className = 'spec-value';
+          valueEl.textContent = spec.value;
+          
+          const labelEl = document.createElement('div');
+          labelEl.className = 'spec-label';
+          labelEl.textContent = spec.label;
+          
+          specEl.appendChild(valueEl);
+          specEl.appendChild(labelEl);
+          specsElement.appendChild(specEl);
         });
       } catch (e) {
-        console.error('Invalid specs JSON', e);
+        console.error('Error parsing specs JSON:', e);
       }
     }
-  }
-  
-  setupEventListeners() {
-    if (window.matchMedia('(hover: hover)').matches) {
-      const card = this.shadowRoot.querySelector('.vehicle-card');
-      let requestId;
-      
-      card.addEventListener('mousemove', (e) => {
-        if (requestId) {
-          cancelAnimationFrame(requestId);
-        }
-        
-        // Skip 3D effect if user prefers reduced motion
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-          return;
-        }
-        
-        requestId = requestAnimationFrame(() => {
-          const cardRect = card.getBoundingClientRect();
-          const mouseX = e.clientX - cardRect.left;
-          const mouseY = e.clientY - cardRect.top;
-          
-          const cardCenterX = cardRect.width / 2;
-          const cardCenterY = cardRect.height / 2;
-          
-          const angleY = (mouseX - cardCenterX) / 30;
-          const angleX = (cardCenterY - mouseY) / 30;
-          
-          card.style.transform = `perspective(1000px) rotateX(${angleX}deg) rotateY(${angleY}deg) translateY(-5px)`;
-          
-          requestId = null;
-        });
-      });
-      
-      card.addEventListener('mouseleave', () => {
-        if (requestId) {
-          cancelAnimationFrame(requestId);
-          requestId = null;
-        }
-        card.style.transform = 'translateY(-10px)';
-        setTimeout(() => {
-          card.style.transform = '';
-        }, 300);
-      });
-    }
-  }
-  
-  setupKeyboardAccessibility() {
-    const card = this.shadowRoot.querySelector('.vehicle-card');
-    
-    card.addEventListener('keydown', (e) => {
-      // Handle Enter and Space keys for keyboard activation
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        
-        // Toggle display state (show/hide details)
-        const overlay = this.shadowRoot.querySelector('.vehicle-overlay');
-        if (overlay.style.transform === 'translateY(0px)') {
-          overlay.style.transform = 'translateY(calc(100% - 100px))';
-        } else {
-          overlay.style.transform = 'translateY(0px)';
-        }
-      }
-    });
-    
-    // Differentiate between mouse and keyboard focus
-    card.addEventListener('focus', (e) => {
-      // Check if the focus was triggered by keyboard
-      if (this.lastInteractionWasKeyboard) {
-        card.classList.add('keyboard-focus');
-      }
-    });
-    
-    card.addEventListener('blur', () => {
-      card.classList.remove('keyboard-focus');
-    });
-    
-    // Track keyboard usage
-    document.addEventListener('keydown', () => {
-      this.lastInteractionWasKeyboard = true;
-    }, { capture: true });
-    
-    document.addEventListener('mousedown', () => {
-      this.lastInteractionWasKeyboard = false;
-    }, { capture: true });
   }
 }
 
-customElements.define('dsm-vehicle-card', DsmVehicleCard);
+// Register the component if it's not already registered
+if (!customElements.get('dsm-vehicle-card')) {
+  customElements.define('dsm-vehicle-card', DsmVehicleCard);
+}

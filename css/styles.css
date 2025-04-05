@@ -46,6 +46,7 @@
     scroll-behavior: smooth;
 }
 
+/* === HEADER SPACING === */
 body {
     font-family: var(--primary-font);
     background-color: var(--light);
@@ -53,12 +54,23 @@ body {
     overflow-x: hidden;
     line-height: 1.6;
     font-size: 16px;
+    padding-top: 80px; /* Add space for fixed navbar */
 }
 
-/* Improved accessibility for focus states */
-a:focus, button:focus, input:focus, [tabindex]:focus {
-    outline: 3px solid var(--accent);
-    outline-offset: 2px;
+/* Support for dsm-navbar component */
+dsm-navbar {
+    display: block;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+/* Ensure proper spacing when skipping to content */
+.skip-to-content:focus + dsm-navbar + main {
+    scroll-margin-top: 80px;
 }
 
 /* Skip to content link for keyboard users */
@@ -154,6 +166,21 @@ a:focus, button:focus, input:focus, [tabindex]:focus {
 .nav-links a:hover::after,
 .nav-links a:focus::after {
     width: 100%;
+}
+
+/* Adjust nav-links for when they're slotted */
+@media (max-width: 992px) {
+    .nav-links {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .nav-links a {
+        display: block;
+        padding: 15px 0;
+        width: 100%;
+        text-align: center;
+    }
 }
 
 /* === SECTION STYLES === */
@@ -639,6 +666,20 @@ a:focus, button:focus, input:focus, [tabindex]:focus {
     margin-bottom: 0;
 }
 
+/* === TIMELINE STYLES === */
+dsm-timeline {
+    display: block;
+    width: 100%;
+}
+
+dsm-timeline-item {
+    display: block;
+}
+
+dsm-timeline-item.timeline-animation {
+    will-change: opacity, transform;
+}
+
 /* === FOOTER SPACER === */
 .footer-spacer {
     height: 150px;
@@ -662,6 +703,15 @@ a:focus, button:focus, input:focus, [tabindex]:focus {
 dsm-footer {
     display: block;
     margin-top: 0 !important;
+}
+
+/* === BACK TO TOP === */
+dsm-back-to-top {
+    display: block;
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 99;
 }
 
 /* === RESPONSIVE === */
@@ -886,9 +936,21 @@ dsm-footer {
         padding-right: max(5%, env(safe-area-inset-right));
     }
     
-    .back-to-top {
+    .back-to-top, dsm-back-to-top {
         bottom: max(30px, env(safe-area-inset-bottom, 30px));
         right: max(30px, env(safe-area-inset-right, 30px));
+    }
+    
+    /* Remove safe area padding on desktop */
+    @media (min-width: 992px) {
+        body, .navbar, .footer {
+            padding:0
+        }
+        
+        .back-to-top, dsm-back-to-top {
+            bottom: 30px;
+            right: 30px;
+        }
     }
 }
 

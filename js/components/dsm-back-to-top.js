@@ -1,3 +1,8 @@
+/**
+ * DSM Back to Top Component
+ * A button that appears when scrolling down and returns the user to the top of the page
+ */
+
 class DsmBackToTop extends HTMLElement {
   constructor() {
     super();
@@ -9,124 +14,128 @@ class DsmBackToTop extends HTMLElement {
         
         :host {
           display: block;
+          position: fixed;
+          bottom: 30px;
+          right: 30px;
+          z-index: 99;
         }
         
         .back-to-top {
-          position: fixed;
-          bottom: max(30px, env(safe-area-inset-bottom, 30px));
-          right: max(30px, env(safe-area-inset-right, 30px));
+          background-color: var(--primary, #c02a2a);
+          color: white;
           width: 50px;
           height: 50px;
           border-radius: 50%;
-          background-color: #d42f2f;
           display: flex;
           align-items: center;
           justify-content: center;
-          color: white;
-          font-size: 1.5rem;
-          cursor: pointer;
-          box-shadow: 0 5px 15px rgba(212, 47, 47, 0.3);
-          opacity: 0;
-          transform: translateY(20px);
+          text-decoration: none;
+          box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
           transition: all 0.3s ease;
-          z-index: 999;
-          -webkit-tap-highlight-color: transparent;
+          opacity: 0;
+          visibility: hidden;
+          transform: translateY(20px);
+          cursor: pointer;
         }
         
-        .back-to-top.show {
+        .back-to-top.visible {
           opacity: 1;
+          visibility: visible;
           transform: translateY(0);
         }
         
-        /* For accessibility & better visibility */
-        .back-to-top:hover, .back-to-top:focus {
-          background-color: #c22020;
-          transform: translateY(-3px);
-          box-shadow: 0 8px 20px rgba(212, 47, 47, 0.4);
+        .back-to-top:hover,
+        .back-to-top:focus {
+          background-color: var(--primary-dark, #941e1e);
+          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+          transform: translateY(-5px);
         }
         
-        .fa-arrow-up {
-          font-family: 'Font Awesome 6 Free';
-          font-weight: 900;
+        .back-to-top i {
+          font-size: 1.5rem;
         }
         
-        /* Mobile optimizations */
-        @media (max-width: 576px) {
+        /* Handle safe areas on mobile devices */
+        @supports (padding: max(0px)) {
+          :host {
+            bottom: max(30px, env(safe-area-inset-bottom, 30px));
+            right: max(30px, env(safe-area-inset-right, 30px));
+          }
+        }
+        
+        /* Motion reduction */
+        @media (prefers-reduced-motion: reduce) {
           .back-to-top {
-            width: 44px;
-            height: 44px;
-            font-size: 1.2rem;
-            bottom: max(20px, env(safe-area-inset-bottom, 20px));
-            right: max(20px, env(safe-area-inset-right, 20px));
+            transition: opacity 0.1s linear;
+          }
+          
+          .back-to-top:hover,
+          .back-to-top:focus {
+            transform: none;
+          }
+        }
+        
+        /* High contrast mode */
+        @media (prefers-contrast: high) {
+          .back-to-top {
+            background-color: black;
+            outline: 2px solid white;
+            box-shadow: none;
           }
         }
       </style>
       
-      <div class="back-to-top" aria-label="Back to top" role="button" tabindex="0">
-        <i class="fas fa-arrow-up"></i>
-      </div>
+      <button class="back-to-top" aria-label="Back to top">
+        <i class="fas fa-arrow-up" aria-hidden="true"></i>
+      </button>
     `;
   }
   
   connectedCallback() {
-    window.ensureCustomFonts(this.shadowRoot);
-    this.setupScrollListener();
-    this.setupEventListeners();
+    this.button = this.shadowRoot.querySelector('.back-to-top');
     
-    // Force check scroll position on load
-    setTimeout(() => {
-      this.checkScrollPosition();
-    }, 100);
+    // Show/hide the button based on scroll position
+    window.addEventListener('scroll', this.handleScroll.bind(this));
+    
+    // Attach click event
+    this.button.addEventListener('click', this.scrollToTop.bind(this));
+    
+    // Initial check in case the page is already scrolled
+    this.handleScroll();
   }
   
-  setupScrollListener() {
-    const backToTop = this.shadowRoot.querySelector('.back-to-top');
-    let scrollThrottleTimer;
-    
-    window.addEventListener('scroll', () => {
-      if (!scrollThrottleTimer) {
-        scrollThrottleTimer = setTimeout(() => {
-          this.checkScrollPosition();
-          scrollThrottleTimer = null;
-        }, 50);
-      }
-    });
+  disconnectedCallback() {
+    window.removeEventListener('scroll', this.handleScroll.bind(this));
+    this.button.removeEventListener('click', this.scrollToTop.bind(this));
   }
   
-  checkScrollPosition() {
-    const backToTop = this.shadowRoot.querySelector('.back-to-top');
-    if (window.scrollY > 500) {
-      backToTop.classList.add('show');
+  handleScroll() {
+    // Show the button when user scrolls down 300px from the top
+    if (window.scrollY > 300) {
+      this.button.classList.add('visible');
     } else {
-      backToTop.classList.remove('show');
+      this.button.classList.remove('visible');
     }
   }
   
-  setupEventListeners() {
-    const backToTop = this.shadowRoot.querySelector('.back-to-top');
+  scrollToTop(e) {
+    e.preventDefault();
     
-    const scrollToTop = () => {
+    // Check if smooth scrolling is supported and not reduced
+    if ('scrollBehavior' in document.documentElement.style && 
+        !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       window.scrollTo({
         top: 0,
         behavior: 'smooth'
       });
-    };
-    
-    backToTop.addEventListener('click', scrollToTop);
-    
-    // Add touch event with preventDefault to avoid issues
-    backToTop.addEventListener('touchend', (e) => {
-      e.preventDefault();
-      scrollToTop();
-    });
-    
-    backToTop.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        scrollToTop();
-      }
-    });
+    } else {
+      // Fallback for browsers that don't support smooth scrolling
+      window.scrollTo(0, 0);
+    }
   }
 }
 
-customElements.define('dsm-back-to-top', DsmBackToTop);
+// Register the component if it's not already registered
+if (!customElements.get('dsm-back-to-top')) {
+  customElements.define('dsm-back-to-top', DsmBackToTop);
+}

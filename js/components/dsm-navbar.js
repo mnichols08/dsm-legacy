@@ -1,3 +1,8 @@
+/**
+ * DSM Navbar Component
+ * A responsive navigation bar with support for logo and links
+ */
+
 class DsmNavbar extends HTMLElement {
   constructor() {
     super();
@@ -6,192 +11,232 @@ class DsmNavbar extends HTMLElement {
     this.shadowRoot.innerHTML = `
       <style>
         @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Roboto:wght@300;400;500;700&display=swap');
         
         :host {
           display: block;
+          width: 100%;
           position: fixed;
           top: 0;
           left: 0;
-          width: 100%;
+          right: 0;
           z-index: 1000;
-          background-color: rgba(26, 26, 26, 0.9);
-          backdrop-filter: blur(10px);
-          transition: all 0.4s ease;
         }
         
         .navbar {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          padding: 1rem 5%;
+          padding: 0 5%;
+          height: 80px;
+          background-color: rgba(18, 18, 18, 0.95);
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
+          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+          transition: all 0.3s ease;
         }
         
-        :host(.scrolled) .navbar {
-          padding: 0.6rem 5%;
-          box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        .navbar.scrolled {
+          height: 70px;
+          box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+          background-color: rgba(18, 18, 18, 0.98);
         }
         
-        .mobile-menu {
-          display: none;
-          cursor: pointer;
-          font-size: 1.5rem;
-          color: white;
-          border: none;
-          background: transparent;
-          padding: 8px;
-          border-radius: 4px;
-          min-width: 44px;
-          min-height: 44px;
+        .logo-container {
           display: flex;
           align-items: center;
-          justify-content: center;
-          -webkit-tap-highlight-color: transparent;
+        }
+        
+        .nav-links-container {
+          display: flex;
+          align-items: center;
+        }
+        
+        .mobile-menu-btn {
+          display: none;
+          background: none;
+          border: none;
+          color: white;
+          font-size: 1.5rem;
+          cursor: pointer;
+          padding: 10px;
+          z-index: 1001;
         }
         
         @media (max-width: 992px) {
-          ::slotted(nav) {
-            display: none !important;
+          .mobile-menu-btn {
+            display: block;
           }
           
-          .mobile-menu {
+          .nav-links-container {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 80%;
+            max-width: 400px;
+            height: 100vh;
+            background-color: rgba(18, 18, 18, 0.98);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: right 0.3s ease;
+            box-shadow: -5px 0 20px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
           }
           
-          ::slotted(nav.show) {
+          .nav-links-container.active {
+            right: 0;
+          }
+          
+          .nav-links-container ::slotted(nav) {
             display: flex !important;
-            flex-direction: column;
-            position: absolute;
-            top: 100%;
+            flex-direction: column !important;
+            width: 100%;
+            text-align: center;
+          }
+          
+          .nav-links-container ::slotted(nav a) {
+            margin: 10px 0 !important;
+            padding: 15px 0 !important;
+            font-size: 1.2rem !important;
+          }
+          
+          /* Overlay when menu is active */
+          .menu-overlay {
+            position: fixed;
+            top: 0;
             left: 0;
             width: 100%;
-            background-color: rgba(26, 26, 26, 0.95);
-            padding: 20px;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5);
             z-index: 999;
-            animation: slideDown 0.3s ease-out forwards;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
           }
           
-          ::slotted(nav.show a) {
-            color: white;
-            text-decoration: none;
-            padding: 15px 0;
-            font-size: 1.1rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            width: 100%;
-            display: block;
-            margin: 0 !important;
-          }
-          
-          ::slotted(nav.show a:last-child) {
-            border-bottom: none;
-          }
-          
-          @keyframes slideDown {
-            from {
-              opacity: 0;
-              transform: translateY(-10px);
-            }
-            to {
-              opacity: 1;
-              transform: translateY(0);
-            }
+          .menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
           }
         }
         
-        @media (max-width: 576px) {
+        /* High contrast mode support */
+        @media (prefers-contrast: high) {
           .navbar {
-            padding: 0.8rem 4%;
+            background-color: #000;
+            box-shadow: 0 2px 0 #fff;
           }
           
-          :host(.scrolled) .navbar {
-            padding: 0.5rem 4%;
+          .mobile-menu-btn {
+            border: 1px solid white;
+          }
+        }
+        
+        /* Motion reduction */
+        @media (prefers-reduced-motion: reduce) {
+          * {
+            transition-duration: 0.01ms !important;
           }
         }
       </style>
       
       <div class="navbar">
-        <slot name="logo"></slot>
-        <slot name="links"></slot>
-        <button class="mobile-menu" aria-expanded="false" aria-label="Open Menu">
-          <i class="fas fa-bars"></i>
+        <div class="logo-container">
+          <slot name="logo"></slot>
+        </div>
+        <button aria-label="Toggle navigation menu" class="mobile-menu-btn">
+          <i class="fas fa-bars" aria-hidden="true"></i>
         </button>
+        <div class="nav-links-container">
+          <slot name="links"></slot>
+        </div>
       </div>
+      <div class="menu-overlay"></div>
     `;
-    
-    this.mobileMenu = this.shadowRoot.querySelector('.mobile-menu');
   }
   
   connectedCallback() {
-    this.setupEventListeners();
+    this.setupMobileMenu();
     this.setupScrollEffect();
-    window.ensureCustomFonts(this.shadowRoot);
   }
   
-  setupEventListeners() {
-    this.mobileMenu.addEventListener('click', this.toggleMobileMenu.bind(this));
+  setupMobileMenu() {
+    const menuBtn = this.shadowRoot.querySelector('.mobile-menu-btn');
+    const navContainer = this.shadowRoot.querySelector('.nav-links-container');
+    const overlay = this.shadowRoot.querySelector('.menu-overlay');
     
-    // Close mobile menu when clicking outside
-    document.addEventListener('click', (e) => {
-      const navLinks = this.querySelector('[slot="links"]');
-      if (navLinks.classList.contains('show') && 
-          !this.contains(e.target) && 
-          e.target !== this.mobileMenu) {
-        this.toggleMobileMenu();
+    menuBtn.addEventListener('click', () => {
+      navContainer.classList.toggle('active');
+      overlay.classList.toggle('active');
+      
+      // Change icon based on menu state
+      const icon = menuBtn.querySelector('i');
+      if (navContainer.classList.contains('active')) {
+        icon.classList.remove('fa-bars');
+        icon.classList.add('fa-times');
+        menuBtn.setAttribute('aria-expanded', 'true');
+      } else {
+        icon.classList.remove('fa-times');
+        icon.classList.add('fa-bars');
+        menuBtn.setAttribute('aria-expanded', 'false');
       }
     });
     
-    // Close mobile menu when clicking on a link
-    const navLinks = this.querySelector('[slot="links"]');
-    if (navLinks) {
-      navLinks.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-          if (navLinks.classList.contains('show')) {
-            this.toggleMobileMenu();
-          }
-        });
-      });
-    }
+    // Close menu when clicking on overlay
+    overlay.addEventListener('click', () => {
+      navContainer.classList.remove('active');
+      overlay.classList.remove('active');
+      const icon = menuBtn.querySelector('i');
+      icon.classList.remove('fa-times');
+      icon.classList.add('fa-bars');
+      menuBtn.setAttribute('aria-expanded', 'false');
+    });
     
-    // Handle keyboard events
-    this.mobileMenu.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        this.toggleMobileMenu();
+    // Close menu when ESC key is pressed
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && navContainer.classList.contains('active')) {
+        navContainer.classList.remove('active');
+        overlay.classList.remove('active');
+        const icon = menuBtn.querySelector('i');
+        icon.classList.remove('fa-times');
+        icon.classList.add('fa-bars');
+        menuBtn.setAttribute('aria-expanded', 'false');
+      }
+    });
+    
+    // Close menu when a nav link is clicked
+    navContainer.addEventListener('click', (e) => {
+      // Check if the clicked element or its parent is a link
+      const isLink = e.target.tagName === 'A' || e.target.closest('a');
+      if (isLink) {
+        navContainer.classList.remove('active');
+        overlay.classList.remove('active');
+        const icon = menuBtn.querySelector('i');
+        icon.classList.remove('fa-times');
+        icon.classList.add('fa-bars');
+        menuBtn.setAttribute('aria-expanded', 'false');
       }
     });
   }
   
   setupScrollEffect() {
-    let scrollThrottleTimer;
+    const navbar = this.shadowRoot.querySelector('.navbar');
+    
     window.addEventListener('scroll', () => {
-      if (!scrollThrottleTimer) {
-        scrollThrottleTimer = setTimeout(() => {
-          if (window.scrollY > 50) {
-            this.classList.add('scrolled');
-          } else {
-            this.classList.remove('scrolled');
-          }
-          scrollThrottleTimer = null;
-        }, 50);
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
       }
     });
   }
-  
-  toggleMobileMenu() {
-    const navLinks = this.querySelector('[slot="links"]');
-    const isExpanded = navLinks.classList.contains('show');
-    navLinks.classList.toggle('show');
-    
-    if (!isExpanded) {
-      this.mobileMenu.innerHTML = '<i class="fas fa-times"></i>';
-      this.mobileMenu.setAttribute('aria-expanded', 'true');
-      this.mobileMenu.setAttribute('aria-label', 'Close Menu');
-    } else {
-      this.mobileMenu.innerHTML = '<i class="fas fa-bars"></i>';
-      this.mobileMenu.setAttribute('aria-expanded', 'false');
-      this.mobileMenu.setAttribute('aria-label', 'Open Menu');
-    }
-  }
 }
 
-customElements.define('dsm-navbar', DsmNavbar);
+// Register the component if it's not already registered
+if (!customElements.get('dsm-navbar')) {
+  customElements.define('dsm-navbar', DsmNavbar);
+}

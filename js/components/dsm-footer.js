@@ -29,6 +29,7 @@ class DsmFooter extends HTMLElement {
           justify-content: space-between;
           max-width: 1400px;
           margin: 0 auto;
+          padding: 2em;
         }
         
         .footer-info {
