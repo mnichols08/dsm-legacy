@@ -714,13 +714,19 @@ dsm-navbar {
 
 .engine-timeline-item:nth-child(odd) .engine-detail {
     margin-left: auto;
-    margin-right: 8%;
+    margin-right: 0%;
 }
 
 .engine-timeline-item:nth-child(even) .engine-detail {
     margin-right: auto;
-    margin-left: 8%;
+    /* margin-left: 8%; */
 }
+
+.engine-timeline-item .engine-detail {
+    margin-right: 28%;
+}
+
+
 
 .engine-detail h4 {
     font-size: 1.3rem;
@@ -946,7 +952,8 @@ dsm-navbar {
     
     .engine-year {
         left: 30px;
-        transform: none;
+        /* transform: translateX(-50%); //set above */
+        /* transform: none; */
     }
     
     .engine-detail {
