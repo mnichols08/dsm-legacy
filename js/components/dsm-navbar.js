@@ -21,6 +21,7 @@ class DsmNavbar extends HTMLElement {
           left: 0;
           right: 0;
           z-index: 1000;
+          color-scheme: light dark;
         }
         
         .navbar {
@@ -29,17 +30,18 @@ class DsmNavbar extends HTMLElement {
           align-items: center;
           padding: 0 5%;
           height: 80px;
-          background-color: rgba(18, 18, 18, 0.95);
+          background-color: var(--nav-background, rgba(18, 18, 18, 0.95));
           backdrop-filter: blur(10px);
           -webkit-backdrop-filter: blur(10px);
           box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
           transition: all 0.3s ease;
+          color: var(--nav-text, #ffffff);
         }
         
         .navbar.scrolled {
           height: 70px;
           box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-          background-color: rgba(18, 18, 18, 0.98);
+          background-color: var(--nav-background, rgba(18, 18, 18, 0.98));
         }
         
         .logo-container {
@@ -50,19 +52,41 @@ class DsmNavbar extends HTMLElement {
         .nav-links-container {
           display: flex;
           align-items: center;
+          gap: 1rem;
         }
         
         .mobile-menu-btn {
           display: none;
           background: none;
           border: none;
-          color: white;
+          color: inherit;
           font-size: 1.5rem;
           cursor: pointer;
           padding: 10px;
           z-index: 1001;
+          transition: transform 0.2s ease;
         }
         
+        .mobile-menu-btn:focus-visible {
+          outline: 2px solid var(--primary, #c02a2a);
+          outline-offset: 4px;
+        }
+
+        .nav-actions {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+        }
+
+        .desktop-only {
+          display: flex;
+        }
+
+        .nav-actions ::slotted(button),
+        .nav-actions ::slotted(a) {
+          font: inherit;
+        }
+
         @media (max-width: 992px) {
           .mobile-menu-btn {
             display: block;
@@ -75,7 +99,7 @@ class DsmNavbar extends HTMLElement {
             width: 80%;
             max-width: 400px;
             height: 100vh;
-            background-color: rgba(18, 18, 18, 0.98);
+            background-color: var(--nav-drawer-background, rgba(18, 18, 18, 0.98));
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             display: flex;
@@ -85,8 +109,13 @@ class DsmNavbar extends HTMLElement {
             transition: right 0.3s ease;
             box-shadow: -5px 0 20px rgba(0, 0, 0, 0.2);
             z-index: 1000;
+            gap: 1.5rem;
           }
           
+          .desktop-only {
+            display: none;
+          }
+
           .nav-links-container.active {
             right: 0;
           }
@@ -102,6 +131,12 @@ class DsmNavbar extends HTMLElement {
             margin: 10px 0 !important;
             padding: 15px 0 !important;
             font-size: 1.2rem !important;
+          }
+
+          .nav-links-container ::slotted([slot="actions"]) {
+            width: 100%;
+            display: flex !important;
+            justify-content: center;
           }
           
           /* Overlay when menu is active */
@@ -126,12 +161,12 @@ class DsmNavbar extends HTMLElement {
         
         /* Ensure consistent link styling in slotted navigation */
         ::slotted(nav a), ::slotted(nav a:visited) {
-          color: white !important;
+          color: var(--nav-link, #ffffff) !important;
           text-decoration: none;
         }
         
         ::slotted(nav a:hover), ::slotted(nav a:focus) {
-          color: white !important;
+          color: var(--nav-link-hover, #ffffff) !important;
         }
         
         /* High contrast mode support */
@@ -154,18 +189,22 @@ class DsmNavbar extends HTMLElement {
         }
       </style>
       
-      <div class="navbar">
+      <nav class="navbar" role="navigation" aria-label="Primary navigation">
         <div class="logo-container">
           <slot name="logo"></slot>
         </div>
-        <button aria-label="Toggle navigation menu" class="mobile-menu-btn">
+        <div class="nav-actions desktop-only">
+          <slot name="actions"></slot>
+        </div>
+        <button aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-links" class="mobile-menu-btn">
           <i class="fas fa-bars" aria-hidden="true"></i>
         </button>
-        <div class="nav-links-container">
+        <div class="nav-links-container" id="nav-links" aria-hidden="true">
           <slot name="links"></slot>
+          <slot name="actions"></slot>
         </div>
-      </div>
-      <div class="menu-overlay"></div>
+      </nav>
+      <div class="menu-overlay" aria-hidden="true"></div>
     `;
   }
   
@@ -179,6 +218,10 @@ class DsmNavbar extends HTMLElement {
     const navContainer = this.shadowRoot.querySelector('.nav-links-container');
     const overlay = this.shadowRoot.querySelector('.menu-overlay');
     
+    if (!menuBtn.hasAttribute('aria-expanded')) {
+      menuBtn.setAttribute('aria-expanded', 'false');
+    }
+
     menuBtn.addEventListener('click', () => {
       navContainer.classList.toggle('active');
       overlay.classList.toggle('active');
@@ -189,10 +232,14 @@ class DsmNavbar extends HTMLElement {
         icon.classList.remove('fa-bars');
         icon.classList.add('fa-times');
         menuBtn.setAttribute('aria-expanded', 'true');
+        navContainer.setAttribute('aria-hidden', 'false');
+        document.body && document.body.setAttribute('data-scroll-lock', 'true');
       } else {
         icon.classList.remove('fa-times');
         icon.classList.add('fa-bars');
         menuBtn.setAttribute('aria-expanded', 'false');
+        navContainer.setAttribute('aria-hidden', 'true');
+        document.body && document.body.removeAttribute('data-scroll-lock');
       }
     });
     
@@ -204,6 +251,8 @@ class DsmNavbar extends HTMLElement {
       icon.classList.remove('fa-times');
       icon.classList.add('fa-bars');
       menuBtn.setAttribute('aria-expanded', 'false');
+      navContainer.setAttribute('aria-hidden', 'true');
+      document.body && document.body.removeAttribute('data-scroll-lock');
     });
     
     // Close menu when ESC key is pressed
@@ -215,6 +264,9 @@ class DsmNavbar extends HTMLElement {
         icon.classList.remove('fa-times');
         icon.classList.add('fa-bars');
         menuBtn.setAttribute('aria-expanded', 'false');
+        navContainer.setAttribute('aria-hidden', 'true');
+        document.body && document.body.removeAttribute('data-scroll-lock');
+        menuBtn.focus();
       }
     });
     
@@ -229,6 +281,8 @@ class DsmNavbar extends HTMLElement {
         icon.classList.remove('fa-times');
         icon.classList.add('fa-bars');
         menuBtn.setAttribute('aria-expanded', 'false');
+        navContainer.setAttribute('aria-hidden', 'true');
+        document.body && document.body.removeAttribute('data-scroll-lock');
       }
     });
   }

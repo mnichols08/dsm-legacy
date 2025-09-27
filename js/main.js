@@ -3,13 +3,30 @@
  * Handles custom functionality and user interactions
  */
 
-// Wait for DOM to be fully loaded
+// Wait for DOM to be fully loaded - single event listener
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM Content Loaded - initializing features');
-    // Initialize the tabs with a longer delay to ensure everything is loaded
+    
+    // Initialize tabs with a slight delay to ensure DOM is ready
     setTimeout(() => {
         initLegacyTabs();
+        initEngineHeritageTabs();
     }, 300);
+});
+
+// Run initialization when window is fully loaded - single event listener
+window.addEventListener('load', function() {
+    console.log('Window fully loaded - reinitializing tabs');
+    
+    // Reinitialize tabs to ensure they work
+    initLegacyTabs();
+    initEngineHeritageTabs();
+    
+    // Set up animations
+    animateOnScroll();
+    
+    // Set up testimonials navigation
+    setupTestimonialsNavigation();
 });
 
 /**
@@ -17,68 +34,172 @@ document.addEventListener('DOMContentLoaded', function() {
  */
 function initLegacyTabs() {
     console.log('Initializing legacy tabs');
-    const tabs = document.querySelectorAll('.legacy-tab');
+    const tabs = document.querySelectorAll('.legacy-tabs-container > .legacy-tabs > .legacy-tab');
     const tabContents = document.querySelectorAll('.legacy-tab-content');
-    
+
     if (tabs.length === 0) {
         console.warn('No legacy tabs found');
         return;
     }
-    
-    console.log(`Found ${tabs.length} tabs and ${tabContents.length} content sections`);
-    
-    // First force hide all tab contents
-    tabContents.forEach(content => {
-        content.style.display = 'none';
-        content.classList.remove('active');
+
+    const container = tabs[0].parentElement;
+    if (container && container.dataset.initialized === 'true') {
+        return;
+    }
+
+    setupTabGroup(Array.from(tabs), Array.from(tabContents), {
+        tabIdPrefix: 'legacy-tab',
+        orientation: 'horizontal'
     });
-    
-    // Set the first tab as active and display its content
-    if (tabs[0]) {
-        tabs[0].classList.add('active');
-        const firstTabId = tabs[0].getAttribute('data-tab');
-        if (firstTabId) {
-            const firstContent = document.getElementById(firstTabId + '-content');
-            if (firstContent) {
-                firstContent.style.display = 'block';
-                firstContent.classList.add('active');
-                console.log(`Activated tab content: ${firstTabId}-content`);
-            } else {
-                console.warn(`Could not find content for tab: ${firstTabId}-content`);
+
+    if (container) {
+        container.dataset.initialized = 'true';
+    }
+}
+
+/**
+ * Initializes the tabbed content functionality for the engine heritage section
+ */
+function initEngineHeritageTabs() {
+    console.log('Initializing engine heritage tabs');
+    const heritageContainer = document.querySelector('.engine-heritage .legacy-tabs');
+    if (!heritageContainer) {
+        console.warn('No engine heritage tab container found');
+        return;
+    }
+
+    if (heritageContainer.dataset.initialized === 'true') {
+        return;
+    }
+
+    const heritageTabs = heritageContainer.querySelectorAll('.legacy-tab');
+    const heritageContents = document.querySelectorAll('.engine-heritage .legacy-subtab-content');
+
+    if (heritageTabs.length === 0 || heritageContents.length === 0) {
+        console.warn('Engine heritage tabs not ready');
+        return;
+    }
+
+    setupTabGroup(Array.from(heritageTabs), Array.from(heritageContents), {
+        tabIdPrefix: 'engine-tab',
+        orientation: heritageContainer.dataset.orientation || 'horizontal'
+    });
+
+    heritageContainer.dataset.initialized = 'true';
+}
+
+document.addEventListener('dsm-engine-tabs-updated', () => {
+    setTimeout(initEngineHeritageTabs, 50);
+});
+
+function setupTabGroup(tabs, panels, { tabIdPrefix = 'tab', orientation = 'horizontal' } = {}) {
+    if (!tabs.length) return;
+
+    const axes = orientation === 'vertical'
+        ? { backward: 'ArrowUp', forward: 'ArrowDown' }
+        : { backward: 'ArrowLeft', forward: 'ArrowRight' };
+
+    const activateTab = (targetTab, { setFocus = true } = {}) => {
+        tabs.forEach(tab => {
+            tab.classList.remove('active');
+            tab.setAttribute('aria-selected', 'false');
+            tab.setAttribute('tabindex', '-1');
+        });
+
+        panels.forEach(panel => {
+            panel.classList.remove('active');
+            panel.style.display = 'none';
+            panel.setAttribute('hidden', '');
+        });
+
+        targetTab.classList.add('active');
+        targetTab.setAttribute('aria-selected', 'true');
+        targetTab.setAttribute('tabindex', '0');
+
+        const panelId = targetTab.getAttribute('aria-controls');
+        const associatedPanel = panels.find(panel => panel.id === panelId);
+
+        if (associatedPanel) {
+            associatedPanel.classList.add('active');
+            associatedPanel.style.display = 'block';
+            associatedPanel.removeAttribute('hidden');
+        }
+
+        if (setFocus) {
+            targetTab.focus();
+        }
+    };
+
+    tabs.forEach((tab, index) => {
+        const tabDataId = tab.dataset.tab || `${tabIdPrefix}-${index}`;
+        const generatedId = tab.id || `${tabIdPrefix}-${tabDataId}`;
+        tab.id = generatedId;
+        tab.setAttribute('role', 'tab');
+
+        const panelId = tab.getAttribute('aria-controls') || `${tabDataId}-content`;
+        tab.setAttribute('aria-controls', panelId);
+
+        const associatedPanel = panels.find(panel => panel.id === panelId);
+        if (associatedPanel) {
+            associatedPanel.setAttribute('role', 'tabpanel');
+            associatedPanel.setAttribute('aria-labelledby', generatedId);
+            associatedPanel.setAttribute('tabindex', '0');
+        }
+
+        if (index === 0) {
+            tab.classList.add('active');
+            tab.setAttribute('aria-selected', 'true');
+            tab.setAttribute('tabindex', '0');
+            if (associatedPanel) {
+                associatedPanel.classList.add('active');
+                associatedPanel.style.display = 'block';
+                associatedPanel.removeAttribute('hidden');
+            }
+        } else {
+            tab.classList.remove('active');
+            tab.setAttribute('aria-selected', 'false');
+            tab.setAttribute('tabindex', '-1');
+            if (associatedPanel) {
+                associatedPanel.classList.remove('active');
+                associatedPanel.style.display = 'none';
+                associatedPanel.setAttribute('hidden', '');
             }
         }
-    }
-    
-    // Add click event to all tabs with direct function assignment for better reliability
-    tabs.forEach(tab => {
-        tab.addEventListener('click', function(e) {
-            e.preventDefault();
-            const tabId = this.getAttribute('data-tab');
-            console.log(`Tab clicked: ${tabId}`);
-            
-            // Remove active class from all tabs
-            tabs.forEach(t => t.classList.remove('active'));
-            
-            // Add active class to clicked tab
-            this.classList.add('active');
-            
-            // Force hide all tab content first
-            tabContents.forEach(content => {
-                content.style.display = 'none';
-                content.classList.remove('active');
-            });
-            
-            // Show selected tab content
-            const selectedContent = document.getElementById(tabId + '-content');
-            if (selectedContent) {
-                selectedContent.style.display = 'block';
-                selectedContent.classList.add('active');
-                console.log(`Activated tab content: ${tabId}-content`);
-            } else {
-                console.warn(`Could not find content for tab: ${tabId}-content`);
+
+        tab.addEventListener('click', (event) => {
+            event.preventDefault();
+            activateTab(tab, { setFocus: true });
+        });
+
+        tab.addEventListener('keydown', (event) => {
+            switch (event.key) {
+                case axes.forward:
+                case axes.backward: {
+                    event.preventDefault();
+                    const direction = event.key === axes.forward ? 1 : -1;
+                    const currentIndex = tabs.indexOf(tab);
+                    const nextIndex = (currentIndex + direction + tabs.length) % tabs.length;
+                    activateTab(tabs[nextIndex]);
+                    break;
+                }
+                case 'Home':
+                    event.preventDefault();
+                    activateTab(tabs[0]);
+                    break;
+                case 'End':
+                    event.preventDefault();
+                    activateTab(tabs[tabs.length - 1]);
+                    break;
+                default:
+                    break;
             }
         });
     });
+
+    const initiallyActive = tabs.find(tab => tab.classList.contains('active')) || tabs[0];
+    if (initiallyActive) {
+        activateTab(initiallyActive, { setFocus: false });
+    }
 }
 
 /**
@@ -105,20 +226,6 @@ function animateOnScroll() {
         });
     }
 }
-
-// Run the tabs initialization again when window is fully loaded
-window.addEventListener('load', function() {
-    console.log('Window fully loaded - reinitializing tabs');
-    
-    // Reinitialize tabs to ensure they work
-    initLegacyTabs();
-    
-    // Set up animations
-    animateOnScroll();
-    
-    // Set up testimonials navigation
-    setupTestimonialsNavigation();
-});
 
 /**
  * Sets up keyboard navigation for the testimonials section

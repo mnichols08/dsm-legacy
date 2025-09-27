@@ -4,13 +4,37 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, viewport-fit=cover">
 <meta name="theme-color" content="#d42f2f">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="description" content="Explore the history, vehicles, and legacy of Diamond Star Motors—a landmark collaboration between Mitsubishi and Chrysler that defined 1990s performance.">
+<meta name="keywords" content="Diamond Star Motors, DSM, Mitsubishi Eclipse, Eagle Talon, Plymouth Laser, 4G63 engine, automotive history">
+<link rel="canonical" href="https://example.com/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Diamond Star Motors: Automotive Legend">
+<meta property="og:description" content="Dive into the partnership, vehicles, and community that made Diamond Star Motors an icon of 1990s performance.">
+<meta property="og:url" content="https://example.com/">
+<meta property="og:image" content="images/dsm_panorama.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Diamond Star Motors: Automotive Legend">
+<meta name="twitter:description" content="Discover the legacy of DSM—from factory origins to enthusiast culture.">
 <title>Diamond Star Motors: Automotive Legend</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="stylesheet" href="css/styles.css">
 <link rel="stylesheet" href="css/legacy-tabs.css">
 <link rel="stylesheet" href="css/community.css">
+<script>
+  (function() {
+    try {
+      const savedTheme = localStorage.getItem('dsm-theme');
+      if (savedTheme === 'dark' || savedTheme === 'light') {
+        document.documentElement.setAttribute('data-theme', savedTheme);
+      }
+    } catch (error) {
+      console.warn('Theme preference unavailable', error);
+    }
+  })();
+</script>
 <!-- Add specific style to fix factory icons and mobile improvements -->
 <style>
   .factory-icon i {
@@ -25,20 +49,58 @@
     transform: none !important;
   }
   
+  /* Theme toggle pill */
+  .theme-toggle-wrapper {
+    display: flex;
+    align-items: center;
+  }
+  
+  .theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.9rem;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    background: rgba(255, 255, 255, 0.1);
+    color: inherit;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease, border-color 0.3s ease;
+  }
+  
+    .theme-toggle:focus-visible {
+        outline: 3px solid var(--accent);
+        outline-offset: 3px;
+        box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent-on-dark) 45%, transparent);
+    }
+  
+  .theme-toggle:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+  }
+  
+  .theme-toggle__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
   /* Mobile-only optimizations - confined to mobile with max-width */
   @media (max-width: 768px) {
     .hero-title {
-      font-size: 2.5rem;
+      font-size: 2.3rem;
     }
     
     .hero-subtitle {
-      font-size: 1.1rem;
+      font-size: 1.05rem;
     }
     
-    /* Vehicle card mobile fixes */
-    .vehicle-card {
-      height: auto;
-      min-height: 450px;
+    .theme-toggle {
+      margin-top: 1rem;
     }
   }
   
@@ -93,6 +155,8 @@
 <script src="js/components/font-helper.js"></script>
 <!-- Component Loader -->
 <script src="js/components/component-loader.js"></script>
+<!-- Dynamic content loader -->
+<script src="js/content-loader.js" defer></script>
 <!-- Component Tester - Load after a delay -->
 <script>
   // Load test script after a delay to ensure components have time to register
@@ -105,15 +169,13 @@
 </head>
 <body>
 <!-- Skip to content link for accessibility -->
-<a href="#about" class="skip-to-content">Skip to main content</a>
+<a href="#main-content" class="skip-to-content">Skip to main content</a>
 
 <!-- Navigation Bar -->
 <dsm-navbar>
     <div slot="logo" class="logo">
         <div class="logo-symbol">
             <img src="images/Mitsubishi_logo.svg" alt="Mitsubishi Logo">
-            <!-- <div class="diamond"></div>
-            <div class="star">★</div> -->
         </div>
         <div class="logo-text">
            <img src="images/dsmlogo.svg" alt="Diamond Star Motors Logo">
@@ -123,14 +185,22 @@
     <nav slot="links" class="nav-links">
         <a href="#about">About</a>
         <a href="#precursors">Precursors</a>
+        <a href="#contemporaries">Contemporaries</a>
         <a href="#timeline">History</a>
         <a href="#vehicles">Vehicles</a>
         <a href="#factory">Factory</a>
         <a href="#legacy">Legacy</a>
         <a href="#gallery">Gallery</a>
     </nav>
+    <div slot="actions" class="theme-toggle-wrapper">
+        <button id="theme-toggle" type="button" class="theme-toggle" aria-pressed="false" aria-label="Activate dark mode">
+            <span class="theme-toggle__icon" aria-hidden="true"><i class="fas fa-moon"></i></span>
+            <span class="theme-toggle__text">Dark</span>
+        </button>
+    </div>
 </dsm-navbar>
 
+<main id="main-content" role="main" tabindex="-1">
 <!-- Hero Section -->
 <dsm-hero 
     id="home"
@@ -152,44 +222,57 @@
             <img src="images/dsm_factory.jpg" alt="Diamond Star Motors Factory">
         </div>
         <div class="about-text">
-            <h3>A Groundbreaking Alliance</h3>
-            <p>Diamond Star Motors (DSM) represented a pioneering cross-continental partnership between America's Chrysler Corporation and Japan's Mitsubishi Motors. The name ingeniously combined elements from both companies' logos: Mitsubishi's three diamonds and Chrysler's pentastar.</p>
-            <p>Formed in 1985, this joint venture established its manufacturing home in Normal, Illinois, with a state-of-the-art facility spanning nearly 2 million square feet. The plant incorporated cutting-edge automation with approximately 1,000 robots working alongside its human workforce.</p>
-            <p>What made DSM remarkable was its blend of Japanese engineering precision with American automotive design sensibilities. This cultural fusion resulted in vehicles that captured the imagination of enthusiasts and everyday drivers alike, creating a legacy that continues to influence automotive culture today.</p>
+            <h3 class="about-headline"></h3>
+            <div class="about-copy"></div>
             <a href="#timeline" class="btn">EXPLORE THE HISTORY</a>
         </div>
     </div>
 </section>
 
 <!-- Precursors Section -->
-<section id="precursors" class="section" style="background-color: #f8f8f8;">
+<section id="precursors" class="section" style="background-color: var(--surface-alt);">
     <div class="section-title">
         <h2>THE PRECURSORS</h2>
         <p>The legendary vehicles that paved the way for Diamond Star Motors</p>
     </div>
     <div style="max-width: 1400px; margin: 0 auto;">
+        <div class="precursors-intro" style="text-align: center; margin-bottom: 3rem;">
+            <h3 class="precursors-intro-title" style="font-size: 2rem; color: var(--secondary); margin-bottom: 1.5rem;"></h3>
+            <p class="precursors-intro-description" style="max-width: 900px; margin: 0 auto; line-height: 1.7;"></p>
+        </div>
+
+        <div class="vehicle-cards" id="precursor-cards"></div>
+    </div>
+</section>
+<!-- Contemporary Models Section -->
+<section id="contemporaries" class="section" style="background-color: var(--surface-alt);">
+    <div class="section-title">
+        <h2>THE CONTEMPORARIES</h2>
+        <p>Notable models that shared the spotlight with Diamond Star Motors</p>
+    </div>
+    <div style="max-width: 1400px; margin: 0 auto;">
         <div style="text-align: center; margin-bottom: 3rem;">
-            <h3 style="font-size: 2rem; color: var(--secondary); margin-bottom: 1.5rem;">The Chrysler-Mitsubishi Partnership Before DSM</h3>
-            <p style="max-width: 900px; margin: 0 auto; line-height: 1.7;">Before the Diamond Star Motors joint venture officially formed in 1985, Chrysler and Mitsubishi had already established a strong working relationship that produced several notable vehicles. These early collaborations laid the groundwork for what would eventually become one of the most significant Japanese-American automotive partnerships.</p>
+            <h3 style="font-size: 2rem; color: var(--secondary); margin-bottom: 1.5rem;">The Chrysler-Mitsubishi Performance Era</h3>
+            <p style="max-width: 900px; margin: 0 auto; line-height: 1.7;">While the DSM vehicles became icons in their own right, they were part of a broader performance renaissance for both Chrysler and Mitsubishi in the 1990s. These contemporary models shared showroom space and technological advancements with the Eclipse, Talon, and Laser, creating a diverse lineup of performance-oriented vehicles.</p>
         </div>
         
         <div class="vehicle-cards">
             <div class="vehicle-card">
                 <div class="vehicle-image">
-                    <img src="images/1987-starion-5.jpg" alt="Mitsubishi Starion / Chrysler Conquest">
+                    <img src="images/3000-gt.webp" alt="Mitsubishi 3000GT / Dodge Stealth">
                 </div>
                 <div class="vehicle-overlay">
-                    <h3 class="vehicle-title">Starion / Conquest</h3>
-                    <p class="vehicle-years">1982-1989</p>
-                    <p class="vehicle-desc">The Mitsubishi Starion and its badge-engineered variants (sold as Dodge, Plymouth, and later Chrysler Conquest in North America) were turbocharged rear-wheel-drive sports coupes that demonstrated the potential of the Chrysler-Mitsubishi partnership. These vehicles featured cutting-edge technology for their time and earned a reputation in motorsports.</p>
+                    <h3 class="vehicle-title">3000GT / Stealth</h3>
+                    <p class="vehicle-years">1990-2000</p>
+                    <p class="vehicle-desc">The Mitsubishi 3000GT (sold as the Dodge Stealth in North America) was the technological flagship of Mitsubishi's lineup, featuring active aerodynamics, four-wheel steering, and all-wheel drive in top VR-4 trim. While not produced at the DSM plant, this grand tourer showcased the pinnacle of Japanese-American automotive collaboration.</p>
                     <div class="vehicle-specs">
                         <div class="spec">
-                            <div class="spec-value">RWD</div>
-                            <div class="spec-label">LAYOUT</div>
+                            <div class="spec-value">AWD</div>
+                            <div class="spec-label">OPTION</div>
                         </div>
                         <div class="spec">
-                            <div class="spec-value">TURBO</div>
-                            <div class="spec-label">POWER</div>
+                            <div class="spec-value">TWIN TURBO</div>
+                            <div class="spec-label">VR-4 MODEL</div>
                         </div>
                         <div class="spec">
                             <div class="spec-value">2+2</div>
@@ -201,24 +284,24 @@
             
             <div class="vehicle-card">
                 <div class="vehicle-image">
-                    <img src="images/galant-vr4-1.webp" alt="Mitsubishi Galant VR-4">
+                    <img src="images/avenger.jpg" alt="Chrysler Sebring / Dodge Avenger">
                 </div>
                 <div class="vehicle-overlay">
-                    <h3 class="vehicle-title">Galant VR-4</h3>
-                    <p class="vehicle-years">1987-1992 (1st Gen)</p>
-                    <p class="vehicle-desc">The Mitsubishi Galant VR-4 was created as a Group A rally homologation special, featuring a turbocharged engine and all-wheel drive. While not directly part of the Chrysler partnership, this vehicle's technology and performance philosophy influenced later DSM vehicles and eventually led to the legendary Lancer Evolution series.</p>
+                    <h3 class="vehicle-title">Sebring / Avenger</h3>
+                    <p class="vehicle-years">1995-2000 (1st Gen)</p>
+                    <p class="vehicle-desc">The Chrysler Sebring and Dodge Avenger coupes were produced at the DSM plant in Normal, Illinois despite coming after Mitsubishi's purchase of Chrysler's stake. These stylish coupes shared a platform with the Mitsubishi Galant and offered a blend of comfort and sportiness that appealed to American consumers looking for a more mature sport coupe.</p>
                     <div class="vehicle-specs">
                         <div class="spec">
-                            <div class="spec-value">AWD</div>
+                            <div class="spec-value">FWD</div>
                             <div class="spec-label">LAYOUT</div>
                         </div>
                         <div class="spec">
-                            <div class="spec-value">TURBO</div>
-                            <div class="spec-label">POWER</div>
+                            <div class="spec-value">V6</div>
+                            <div class="spec-label">OPTION</div>
                         </div>
                         <div class="spec">
-                            <div class="spec-value">RALLY</div>
-                            <div class="spec-label">HERITAGE</div>
+                            <div class="spec-value">2+2</div>
+                            <div class="spec-label">SEATING</div>
                         </div>
                     </div>
                 </div>
@@ -226,69 +309,67 @@
             
             <div class="vehicle-card">
                 <div class="vehicle-image">
-                    <img src="images/mitsubishis-4g63t-the-iconic-four-cylinder-at-the-heart-of-nine-evo-generations_1.jpg" alt="Mitsubishi Lancer EX 2000 Turbo">
+                    <img src="images/galant.jpg" alt="Mitsubishi Galant">
                 </div>
                 <div class="vehicle-overlay">
-                    <h3 class="vehicle-title">Lancer EX 2000</h3>
-                    <span>TURBO</span>
-                    <p class="vehicle-years">1980-1983</p>
-                    <p class="vehicle-desc">The Mitsubishi Lancer EX 2000 Turbo was one of the first production turbocharged cars from Japan. Featuring the debut of the legendary 4G63 engine, this pioneering performance sedan was the direct ancestor to the DSM vehicles and laid the foundation for Mitsubishi's turbocharged philosophy, ultimately influencing the development of the Eclipse, Talon, and Laser.</p>
+                    <h3 class="vehicle-title">Galant</h3>
+                    <p class="vehicle-years">1994-1998 (7th Gen)</p>
+                    <p class="vehicle-desc">While the Galant VR-4 was a precursor to the DSM vehicles, the seventh-generation Galant was produced at the Normal plant alongside the Eclipse. This sedan offered a more practical alternative to the DSM sports coupes while still providing engaging driving dynamics, especially in V6 form.</p>
                     <div class="vehicle-specs">
                         <div class="spec">
                             <div class="spec-value">FWD</div>
                             <div class="spec-label">LAYOUT</div>
                         </div>
                         <div class="spec">
-                            <div class="spec-value">4G63</div>
-                            <div class="spec-label">ENGINE</div>
+                            <div class="spec-value">V6</div>
+                            <div class="spec-label">OPTION</div>
+                        </div>
+                        <div class="spec">
+                            <div class="spec-value">SEDAN</div>
+                            <div class="spec-label">BODY</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="vehicle-card">
+                <div class="vehicle-image">
+                    <img src="images/eclipse-spyder.avif" alt="Mitsubishi Eclipse Spyder">
+                </div>
+                <div class="vehicle-overlay">
+                    <h3 class="vehicle-title">Eclipse Spyder</h3>
+                    <p class="vehicle-years">1996-1999 (1st Gen)</p>
+                    <p class="vehicle-desc">Introduced during the second generation of DSM vehicles, the Eclipse Spyder brought open-air motoring to the platform. Available in both naturally aspirated GS and turbocharged GS-T trims (though not in AWD GSX form), the Spyder expanded the appeal of the Eclipse line with its power-operated convertible top and reinforced chassis.</p>
+                    <div class="vehicle-specs">
+                        <div class="spec">
+                            <div class="spec-value">FWD</div>
+                            <div class="spec-label">LAYOUT</div>
                         </div>
                         <div class="spec">
                             <div class="spec-value">TURBO</div>
-                            <div class="spec-label">PIONEER</div>
+                            <div class="spec-label">OPTION</div>
+                        </div>
+                        <div class="spec">
+                            <div class="spec-value">CONVERTIBLE</div>
+                            <div class="spec-label">BODY</div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        
+        <div style="text-align: center; margin-top: 3rem;">
+            <p style="max-width: 900px; margin: 0 auto 2rem; line-height: 1.7;">These contemporary models demonstrate how the Chrysler-Mitsubishi partnership extended beyond just the core DSM vehicles. From the technological tour de force of the 3000GT/Stealth to the practical performance of the Galant, these cars helped define an era when Japanese engineering and American design sensibilities created compelling vehicles for enthusiasts.</p>
+            <a href="#timeline" class="btn">CONTINUE TO TIMELINE</a>
+        </div>
     </div>
 </section>
 
 <!-- Timeline Section -->
-<dsm-timeline id="timeline" title="THE HISTORY" subtitle="Key moments in the Diamond Star Motors journey">
-    <dsm-timeline-item year="1970" title="The Beginning">
-        <p>The origins of Diamond Star Motors began when Chrysler acquired a 15% stake in Mitsubishi Motors. This initial partnership allowed Chrysler to distribute Mitsubishis as captive imports under Chrysler, Dodge, and Plymouth brands.</p>
-    </dsm-timeline-item>
-    <dsm-timeline-item year="1982" title="Growing Partnership">
-        <p>Chrysler was now importing 110,000 Mitsubishis annually. The compact cars were helping Chrysler meet consumer demand for smaller, more fuel-efficient vehicles, filling a critical gap in their product lineup.</p>
-    </dsm-timeline-item>
-    <dsm-timeline-item year="1985" title="Official Formation">
-        <p>Chrysler Corporation and Mitsubishi Motors Corporation officially established Diamond Star Motors as a 50-50 joint venture. The partnership was designed to circumvent import quotas and combine resources for mutual benefit.</p>
-    </dsm-timeline-item>
-    <dsm-timeline-item year="1986" title="Breaking Ground">
-        <p>Construction began on a $650 million manufacturing facility in Normal, Illinois. The 1.9 million square foot plant was designed with an annual production capacity of 240,000 vehicles, showcasing both companies' commitment to the venture.</p>
-    </dsm-timeline-item>
-    <dsm-timeline-item year="1988" title="Plant Completion">
-        <p>The Diamond Star Motors manufacturing facility was completed in Normal, Illinois. The highly automated plant featured approximately 1,000 robots working alongside its human workforce.</p>
-    </dsm-timeline-item>
-    <dsm-timeline-item year="1989" title="Production Begins">
-        <p>The first "DSM triplets" rolled off the assembly line: the Mitsubishi Eclipse, Plymouth Laser, and Eagle Talon. These sporty 2+2 coupes shared the same platform with different styling cues and would soon develop a cult following.</p>
-    </dsm-timeline-item>
-    <dsm-timeline-item year="1991" title="Ownership Change">
-        <p>Facing financial difficulties, Chrysler sold its 50% stake in the joint venture to Mitsubishi. However, the production of Chrysler vehicles continued on a contractual basis, maintaining the partnership in practice.</p>
-    </dsm-timeline-item>
-    <dsm-timeline-item year="1995" title="New Identity">
-        <p>Diamond Star Motors was officially renamed Mitsubishi Motors Manufacturing America (MMMA), reflecting Mitsubishi's full ownership of the facility. Despite the name change, many enthusiasts continued to use the DSM designation.</p>
-    </dsm-timeline-item>
-    <dsm-timeline-item year="1998" title="Eagle Brand Discontinued">
-        <p>Production of the Eagle Talon ended as Chrysler discontinued the Eagle brand entirely. The DSM trilogy was reduced to a duo with only the Mitsubishi Eclipse continuing production for future generations.</p>
-    </dsm-timeline-item>
-    <dsm-timeline-item year="2015" title="End of an Era">
-        <p>Mitsubishi announced the closure of the plant in Normal, Illinois. Despite efforts to find a buyer to preserve jobs, the facility that had been the birthplace of the DSM legends would close its doors after nearly three decades of operation.</p>
-    </dsm-timeline-item>
-</dsm-timeline>
+<dsm-timeline id="timeline" title="THE HISTORY" subtitle="Key corporate milestones in the Diamond Star Motors journey"></dsm-timeline>
 
 <!-- Vehicle Showcase Section -->
-<section id="vehicles" class="vehicles-section section" style="background-color: var(--light); padding: 120px 5% 140px;">
+<section id="vehicles" class="vehicles-section section" style="background-color: var(--surface-base); padding: 120px 5% 140px;">
     <div class="section-title">
         <h2>THE VEHICLES</h2>
         <p>The iconic models that defined the Diamond Star Motors legacy</p>
@@ -329,19 +410,19 @@
     
     <!-- Update the technical specs box with better contrast -->
     <div style="background-color: var(--secondary); color: white; padding: 3rem; border-radius: 15px; max-width: 1400px; margin: 0 auto; box-shadow: 0 15px 40px rgba(0,0,0,0.15);">
-        <h3 style="font-size: 1.8rem; color: var(--accent); margin-bottom: 1.5rem; text-align: center;">Technical Specifications</h3>
+    <h3 style="font-size: 1.8rem; color: var(--accent-on-dark); margin-bottom: 1.5rem; text-align: center;">Technical Specifications</h3>
         
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
             <div>
-                <h4 style="font-size: 1.3rem; color: var(--accent); margin-bottom: 1rem;">Powertrain</h4>
+                <h4 style="font-size: 1.3rem; color: var(--accent-on-dark); margin-bottom: 1rem;">Powertrain</h4>
                 <p style="line-height: 1.7;">The top-tier models featured the legendary 4G63 turbocharged 2.0L inline-four engine, producing 195 horsepower and 203 lb-ft of torque. This robust engine became famous for its tuning potential, with enthusiasts routinely extracting 300+ horsepower with basic modifications.</p>
             </div>
             <div>
-                <h4 style="font-size: 1.3rem; color: var(--accent); margin-bottom: 1rem;">All-Wheel Drive</h4>
+                <h4 style="font-size: 1.3rem; color: var(--accent-on-dark); margin-bottom: 1rem;">All-Wheel Drive</h4>
                 <p style="line-height: 1.7;">The AWD system on GSX, TSi AWD, and RS Turbo AWD models featured a viscous coupling center differential that sent 50% of power to the rear wheels in normal conditions, with the ability to transfer more power to either axle as needed for optimal traction in various conditions.</p>
             </div>
             <div>
-                <h4 style="font-size: 1.3rem; color: var(--accent); margin-bottom: 1rem;">Performance</h4>
+                <h4 style="font-size: 1.3rem; color: var(--accent-on-dark); margin-bottom: 1rem;">Performance</h4>
                 <p style="line-height: 1.7;">The turbocharged AWD variants could accelerate from 0-60 mph in approximately 6.4 seconds - impressive performance for early 1990s sports cars in their price range. Their combination of speed, handling, and all-weather capability made them formidable competitors against more expensive sports cars.</p>
             </div>
         </div>
@@ -359,28 +440,28 @@
         <div class="factory-grid">
             <div class="factory-card">
                 <div class="factory-icon">
-                    <i class="fas fa-industry"></i>
+                    <i class="fas fa-industry" aria-hidden="true"></i>
                 </div>
                 <h3>Advanced Facility</h3>
                 <p>The Normal, Illinois plant spanned an impressive 1.9 million square feet and represented a $650 million investment. This state-of-the-art facility was designed to produce up to 240,000 vehicles annually, showcasing the commitment both Chrysler and Mitsubishi had to the joint venture.</p>
             </div>
             <div class="factory-card">
                 <div class="factory-icon">
-                    <i class="fas fa-robot"></i>
+                    <i class="fas fa-robot" aria-hidden="true"></i>
                 </div>
                 <h3>Automation Pioneer</h3>
                 <p>The factory featured cutting-edge automation with approximately 1,000 robots working alongside human workers. This blend of high technology and skilled labor created a manufacturing powerhouse that set new standards for efficiency and quality.</p>
             </div>
             <div class="factory-card">
                 <div class="factory-icon">
-                    <i class="fas fa-people-group"></i>
+                    <i class="fas fa-people-group" aria-hidden="true"></i>
                 </div>
                 <h3>Workforce Excellence</h3>
                 <p>At its peak, the plant employed nearly 3,000 workers who formed the United Auto Workers Local 2488 in 1989. The combination of a skilled workforce and innovative manufacturing processes contributed to the quality and performance that made DSM vehicles so beloved.</p>
             </div>
             <div class="factory-card">
                 <div class="factory-icon">
-                    <i class="fas fa-gears"></i>
+                    <i class="fas fa-gears" aria-hidden="true"></i>
                 </div>
                 <h3>Production Versatility</h3>
                 <p>The factory demonstrated remarkable flexibility, producing multiple models on the same production line. Beyond the initial DSM triplets, the facility would go on to manufacture other vehicles including the Mitsubishi Galant and later the Mitsubishi Outlander Sport.</p>
@@ -397,16 +478,16 @@
     </div>
     
     <div class="legacy-tabs-container">
-        <div class="legacy-tabs">
-            <button class="legacy-tab active" data-tab="enthusiast">Enthusiast Culture</button>
-            <button class="legacy-tab" data-tab="technical">Technical Legacy</button>
-            <button class="legacy-tab" data-tab="heritage">Engine Heritage</button>
-            <button class="legacy-tab" data-tab="global">Global Impact</button>
+        <div class="legacy-tabs" role="tablist" aria-label="DSM legacy topics">
+            <button class="legacy-tab active" data-tab="enthusiast" type="button" role="tab" id="legacy-tab-enthusiast" aria-selected="true" aria-controls="enthusiast-content" tabindex="0">Enthusiast Culture</button>
+            <button class="legacy-tab" data-tab="technical" type="button" role="tab" id="legacy-tab-technical" aria-selected="false" aria-controls="technical-content" tabindex="-1">Technical Legacy</button>
+            <button class="legacy-tab" data-tab="heritage" type="button" role="tab" id="legacy-tab-heritage" aria-selected="false" aria-controls="heritage-content" tabindex="-1">Engine Heritage</button>
+            <button class="legacy-tab" data-tab="global" type="button" role="tab" id="legacy-tab-global" aria-selected="false" aria-controls="global-content" tabindex="-1">Global Impact</button>
         </div>
         
         <div class="legacy-content-container">
             <!-- Enthusiast Tab -->
-            <div class="legacy-tab-content active" id="enthusiast-content">
+            <div class="legacy-tab-content active" id="enthusiast-content" role="tabpanel" aria-labelledby="legacy-tab-enthusiast">
                 <div class="legacy-content">
                     <div class="legacy-text">
                         <h3>An Enthusiast Phenomenon</h3>
@@ -414,28 +495,28 @@
                         <p>These vehicles developed a devoted following for their tunability and performance potential. The 4G63 turbocharged engine found in top-trim models proved capable of handling significantly more power than stock, making DSM vehicles favorites in the aftermarket tuning community.</p>
                         <p>Racing success further cemented the DSM legacy, with modified Eclipses, Talons, and Lasers competing successfully in various motorsport disciplines from drag racing to hill climbs. In 2004 and 2005, Greg Collier won the NASA Super Unlimited class national title in a Plymouth Laser RS Turbo, beating purpose-built Ferrari and Porsche race cars.</p>
                         <p>Today, well-preserved examples of first-generation DSM vehicles are increasingly sought after by collectors, recognizing their significance in automotive history as pioneers of accessible performance and emblems of Japanese-American automotive collaboration.</p>
-                        <button class="btn" onclick="document.getElementById('community').scrollIntoView({behavior: 'smooth'})">MEET THE ENTHUSIASTS</button>
+                        <button class="btn" type="button" onclick="document.getElementById('community').scrollIntoView({behavior: 'smooth'})">MEET THE ENTHUSIASTS</button>
                     </div>
                     <div class="legacy-images">
                         <div class="legacy-image">
-                            <img src="https://picsum.photos/id/1068/600/300" alt="DSM Car Meet">
+                            <img src="https://picsum.photos/id/1068/600/300" alt="DSM car meet at dusk">
                         </div>
                         <div class="legacy-image">
-                            <img src="images/RedDemon_WCF2017.jpg" alt="Modified Eclipse">
+                            <img src="images/RedDemon_WCF2017.jpg" alt="Modified Mitsubishi Eclipse on the track">
                         </div>
                         <div class="legacy-image">
-                            <img src=images/feisty-four-cylinder.webp" alt="Racing Talon">
+                            <img src="images/feisty-four-cylinder-aaron-gregorys-7-second-eagle-talon-2020-12-21_08-00-27_573441.webp" alt="Racing Eagle Talon launching at drag strip">
                         </div>
                     </div>
                 </div>
             </div>
             
             <!-- Technical Legacy Tab -->
-            <div class="legacy-tab-content" id="technical-content">
+            <div class="legacy-tab-content" id="technical-content" role="tabpanel" aria-labelledby="legacy-tab-technical">
                 <div class="legacy-grid">
                     <div class="legacy-card">
                         <div class="legacy-card-icon">
-                            <i class="fas fa-handshake"></i>
+                            <i class="fas fa-handshake" aria-hidden="true"></i>
                         </div>
                         <h3>Origins & Formation</h3>
                         <p>Diamond Star Motors began in 1970 when Chrysler purchased a 15% stake in Mitsubishi Motors as part of MMC's strategy to expand through foreign partnerships. The name "Diamond Star Motors" derived from their respective logos: Mitsubishi's three diamonds and Chrysler's pentastar.</p>
@@ -444,7 +525,7 @@
                     
                     <div class="legacy-card">
                         <div class="legacy-card-icon">
-                            <i class="fas fa-industry"></i>
+                            <i class="fas fa-industry" aria-hidden="true"></i>
                         </div>
                         <h3>Manufacturing Excellence</h3>
                         <p>The companies broke ground on a 1.9 million square foot production facility in Normal, Illinois in April 1986. The plant was completed in March 1988 with an annual capacity of 240,000 vehicles. Initially, Diamond Star Motors was a 50-50 joint venture between Chrysler and Mitsubishi.</p>
@@ -453,7 +534,7 @@
                     
                     <div class="legacy-card">
                         <div class="legacy-card-icon">
-                            <i class="fas fa-car"></i>
+                            <i class="fas fa-car" aria-hidden="true"></i>
                         </div>
                         <h3>Vehicle Evolution</h3>
                         <p>The first models produced at the DSM facility included the Mitsubishi Eclipse, Plymouth Laser, and Eagle Talon - all 2+2 sports cars built on a newly co-designed platform. These three vehicles were mechanically identical with only cosmetic differences between them.</p>
@@ -462,7 +543,7 @@
                     
                     <div class="legacy-card">
                         <div class="legacy-card-icon">
-                            <i class="fas fa-history"></i>
+                            <i class="fas fa-history" aria-hidden="true"></i>
                         </div>
                         <h3>End of an Era</h3>
                         <p>In 1991, Mitsubishi purchased Chrysler's stake in the joint venture. From that point forward, the manufacture of Chrysler vehicles was on a contractual basis only. Chrysler completely sold its equity stake to Mitsubishi in 1993, and on July 1, 1995, Diamond Star Motors was renamed Mitsubishi Motors Manufacturing America (MMMA).</p>
@@ -472,97 +553,26 @@
             </div>
             
             <!-- Engine Heritage Tab -->
-            <div class="legacy-tab-content" id="heritage-content">
+            <div class="legacy-tab-content" id="heritage-content" role="tabpanel" aria-labelledby="legacy-tab-heritage">
                 <div class="engine-heritage">
                     <div class="engine-intro">
-                        <h3>The Legendary 4G63 Engine</h3>
-                        <p>The heart of the DSM performance legacy is the 4G63 engine - a 1,997 cc (2.0 L) version of Mitsubishi's Sirius engine that became iconic in performance circles worldwide. The engine came in both SOHC and DOHC versions, and both naturally aspirated and turbocharged forms.</p>
+                        <h3 class="engine-intro-title"></h3>
+                        <p class="engine-intro-description"></p>
                     </div>
-                    
-                    <div class="engine-timeline">
-                        <div class="engine-timeline-item">
-                            <div class="engine-year">1980</div>
-                            <div class="engine-detail">
-                                <h4>Origins</h4>
-                                <p>The 4G63 is first introduced in the Lancer EX 2000 Turbo, beginning the legacy of this legendary powerplant.</p>
-                            </div>
-                        </div>
-                        
-                        <div class="engine-timeline-item">
-                            <div class="engine-year">1982-1989</div>
-                            <div class="engine-detail">
-                                <h4>Starion Era</h4>
-                                <p>The Mitsubishi Starion and badge-engineered Conquest feature the 4G63, establishing it as a performance engine with its turbocharged power and reliability.</p>
-                            </div>
-                        </div>
-                        
-                        <div class="engine-timeline-item">
-                            <div class="engine-year">1987-1992</div>
-                            <div class="engine-detail">
-                                <h4>Rally Dominance</h4>
-                                <p>The Mitsubishi Galant VR-4 introduces the 4G63T to rally competition, featuring an iron block and engineered for high power despite extreme conditions.</p>
-                            </div>
-                        </div>
-                        
-                        <div class="engine-timeline-item">
-                            <div class="engine-year">1989-1999</div>
-                            <div class="engine-detail">
-                                <h4>DSM Performance</h4>
-                                <p>The Diamond Star Motors vehicles - Eclipse, Talon, and Laser - all featured the 4G63T engine in their high-performance AWD trims, delivering 195hp in stock form.</p>
-                            </div>
-                        </div>
-                        
-                        <div class="engine-timeline-item">
-                            <div class="engine-year">1992-2007</div>
-                            <div class="engine-detail">
-                                <h4>Evolution Legend</h4>
-                                <p>The Mitsubishi Lancer Evolution I through IX all used versions of the 4G63T engine, winning four consecutive WRC drivers' championships from 1996-1999.</p>
-                            </div>
-                        </div>
-                        
-                        <div class="engine-timeline-item">
-                            <div class="engine-year">2007-Present</div>
-                            <div class="engine-detail">
-                                <h4>Aftermarket Icon</h4>
-                                <p>Though replaced by the 4B11 in Mitsubishi's global lineup, the 4G63 remains in production in China and continues to be a favorite among tuners capable of 1,000+ horsepower builds.</p>
-                            </div>
-                        </div>
-                    </div>
-                    
+                    <div class="engine-timeline" id="engine-milestones"></div>
                     <div class="engine-specs">
                         <h3>4G63T Technical Specifications</h3>
-                        <div class="specs-grid">
-                            <div class="spec-item">
-                                <div class="spec-title">Displacement</div>
-                                <div class="spec-value">1,997cc (2.0L)</div>
-                            </div>
-                            <div class="spec-item">
-                                <div class="spec-title">Block</div>
-                                <div class="spec-value">Cast Iron</div>
-                            </div>
-                            <div class="spec-item">
-                                <div class="spec-title">Head</div>
-                                <div class="spec-value">Aluminum DOHC</div>
-                            </div>
-                            <div class="spec-item">
-                                <div class="spec-title">Bore × Stroke</div>
-                                <div class="spec-value">85.0mm × 88.0mm</div>
-                            </div>
-                            <div class="spec-item">
-                                <div class="spec-title">Stock Power</div>
-                                <div class="spec-value">195-300hp</div>
-                            </div>
-                            <div class="spec-item">
-                                <div class="spec-title">Tuning Potential</div>
-                                <div class="spec-value">1,000hp+</div>
-                            </div>
-                        </div>
+                        <div class="specs-grid" id="engine-specs-grid"></div>
+                    </div>
+                    <div class="engine-heritage-tabs">
+                        <div class="legacy-tabs engine-subtabs" role="tablist" aria-label="Engine heritage details"></div>
+                        <div class="engine-subtab-panels"></div>
                     </div>
                 </div>
             </div>
             
             <!-- Global Impact Tab -->
-            <div class="legacy-tab-content" id="global-content">
+            <div class="legacy-tab-content" id="global-content" role="tabpanel" aria-labelledby="legacy-tab-global">
                 <div class="global-impact">
                     <h3>Global Impact & Continuing Influence</h3>
                     <p class="impact-intro">Diamond Star Motors created a blueprint for international automotive collaboration that continues to influence the industry today. Despite the dissolution of the joint venture, the legacy of DSM extends far beyond its original Illinois factory.</p>
@@ -669,7 +679,7 @@
         <p>Visual celebration of Diamond Star Motors heritage</p>
     </div>
     <dsm-gallery>
-        <dsm-gallery-item image="images/red-demon-eclipse.avif" caption="DSM Factory Line"></dsm-gallery-item>
+        <dsm-gallery-item image="images/Red-Demon-Eclipse.avif" caption="DSM Factory Line"></dsm-gallery-item>
         <dsm-gallery-item image="images/Mitsubishi_Eclipse_front_20080214.jpg" caption="Eclipse GSX"></dsm-gallery-item>
         <dsm-gallery-item image="images/talon-1.jpg" caption="Talon TSi AWD"></dsm-gallery-item>
         <dsm-gallery-item image="images/laser-5.jpg" caption="Plymouth Laser RS"></dsm-gallery-item>
@@ -677,6 +687,8 @@
         <dsm-gallery-item image="images/racing.jpg" caption="DSM Racing"></dsm-gallery-item>
     </dsm-gallery>
 </section>
+
+</main>
 
 <!-- Footer Spacer - This creates visual separation between gallery and footer -->
 <div class="footer-spacer"></div>
@@ -702,6 +714,10 @@ window.componentsReady().then(() => {
     if (typeof initLegacyTabs === 'function') {
       initLegacyTabs();
     }
+        if (typeof initEngineHeritageTabs === 'function') {
+            initEngineHeritageTabs();
+        }
+        document.dispatchEvent(new CustomEvent('dsm-main-loaded'));
     
     // Then load app.js after main.js is ready
     const appScript = document.createElement('script');
@@ -759,6 +775,7 @@ function enhanceMobileExperience() {
 // Run mobile enhancements
 enhanceMobileExperience();
 </script>
+<script src="js/theme-toggle.js" defer></script>
 
 <!-- Add structured data for SEO -->
 <script type="application/ld+json">

@@ -7,10 +7,10 @@
     transform: translateY(-50%);
     width: 50px;
     height: 50px;
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--community-arrow-bg);
     border: none;
     border-radius: 50%;
-    color: white;
+    color: var(--community-arrow-color);
     font-size: 1.2rem;
     cursor: pointer;
     display: flex;
@@ -20,8 +20,10 @@
     transition: all 0.3s ease;
 }
 
-.testimonial-arrow:hover {
+.testimonial-arrow:hover,
+.testimonial-arrow:focus-visible {
     background: var(--primary);
+    color: #ffffff;
 }
 
 .testimonial-arrow-left {
@@ -81,5 +83,6 @@
     .testimonial-arrow:active {
         background: var(--primary);
         opacity: 1;
+        color: #ffffff;
     }
 }

@@ -1,8 +1,8 @@
 /* Legacy Tabs Specific Styling */
 
 .legacy-section {
-    padding: 100px 5%;
-    background-color: var(--light);
+    padding: clamp(72px, 10vw, 110px) 5%;
+    background-color: var(--surface-base);
 }
 
 /* Legacy Tabs Navigation */
@@ -32,6 +32,7 @@
     text-transform: uppercase;
     letter-spacing: 1px;
     font-size: 0.9rem;
+    position: relative;
 }
 
 .legacy-tab:hover {
@@ -40,6 +41,38 @@
 }
 
 .legacy-tab.active {
+    background-color: var(--secondary);
+    color: var(--white);
+}
+
+.legacy-tab[aria-selected="true"] {
+    background-color: var(--secondary);
+    color: var(--white);
+}
+
+.legacy-tab:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+}
+
+.legacy-tab.active:focus-visible,
+.legacy-tab[aria-selected="true"]:focus-visible {
+    outline-color: var(--accent-on-dark);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent-on-dark) 45%, transparent);
+}
+
+:root[data-theme="dark"] .legacy-tab {
+    border-color: rgba(148, 163, 184, 0.6);
+    color: var(--nav-text);
+}
+
+:root[data-theme="dark"] .legacy-tab:hover,
+:root[data-theme="dark"] .legacy-tab:focus-visible {
+    color: var(--nav-text);
+}
+
+:root[data-theme="dark"] .legacy-tab.active,
+:root[data-theme="dark"] .legacy-tab[aria-selected="true"] {
     background-color: var(--secondary);
     color: var(--white);
 }
@@ -148,5 +181,18 @@
     .legacy-tabs {
         flex-direction: column;
         width: 100%;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .legacy-tab {
+        border-color: rgba(148, 163, 184, 0.6);
+        color: var(--nav-text);
+    }
+
+    :root[data-theme="dark"] .legacy-tab,
+    :root[data-theme="dark"] .legacy-tab:hover,
+    :root[data-theme="dark"] .legacy-tab[aria-selected="true"] {
+        border-color: var(--secondary);
     }
 }
