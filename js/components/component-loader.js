@@ -3,54 +3,54 @@
  * This is a direct import version of the main component loader
  */
 
-// Create a global method to check if components are ready
-window.componentsReady = function() {
-  return new Promise((resolve) => {
-    if (document.readyState === 'complete' || document.readyState === 'interactive') {
-      // Give a short delay to ensure components have registered
-      setTimeout(resolve, 500);
-    } else {
-      document.addEventListener('DOMContentLoaded', () => {
-        setTimeout(resolve, 500);
-      });
-    }
-  });
+const componentsLoaded = new Promise((resolve) => {
+  document.addEventListener("dsm-components-loaded", resolve, { once: true });
+});
+
+window.componentsReady = function () {
+  return componentsLoaded;
 };
 
 // Add components to load
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
   // Load core components
   const componentsToLoad = [
-    { name: 'dsm-navbar', path: 'js/components/dsm-navbar.js' },
-    { name: 'dsm-hero', path: 'js/components/dsm-hero.js' },
-    { name: 'dsm-footer', path: 'js/components/dsm-footer.js' },
-    { name: 'dsm-back-to-top', path: 'js/components/dsm-back-to-top.js' },
-    { name: 'dsm-timeline', path: 'js/components/dsm-timeline.js' },
-    { name: 'dsm-vehicle-card', path: 'js/components/dsm-vehicle-card.js' },
+    { name: "dsm-navbar", path: "js/components/dsm-navbar.js" },
+    { name: "dsm-hero", path: "js/components/dsm-hero.js" },
+    { name: "dsm-footer", path: "js/components/dsm-footer.js" },
+    { name: "dsm-back-to-top", path: "js/components/dsm-back-to-top.js" },
+    { name: "dsm-timeline", path: "js/components/dsm-timeline.js" },
+    { name: "dsm-vehicle-card", path: "js/components/dsm-vehicle-card.js" },
     // Load gallery last as it depends on other components
-    { name: 'dsm-gallery', path: 'js/components/dsm-gallery.js', priority: 'low' }
+    {
+      name: "dsm-gallery",
+      path: "js/components/dsm-gallery.js",
+      priority: "low",
+    },
   ];
-  
+
   // Sort components by priority
   componentsToLoad.sort((a, b) => {
-    if (a.priority === 'low' && b.priority !== 'low') return 1;
-    if (a.priority !== 'low' && b.priority === 'low') return -1;
+    if (a.priority === "low" && b.priority !== "low") return 1;
+    if (a.priority !== "low" && b.priority === "low") return -1;
     return 0;
   });
-  
+
   // Load components sequentially to avoid race conditions
   const loadSequentially = async () => {
-    console.log('Starting to load components sequentially');
+    console.log("Starting to load components sequentially");
     for (const component of componentsToLoad) {
       if (!customElements.get(component.name)) {
-        console.log(`Loading component: ${component.name} from ${component.path}`);
+        console.log(
+          `Loading component: ${component.name} from ${component.path}`,
+        );
         await new Promise((resolve, reject) => {
-          const script = document.createElement('script');
+          const script = document.createElement("script");
           script.src = component.path;
           script.onload = () => {
             console.log(`Successfully loaded: ${component.name}`);
             // Add a small delay for low priority components to ensure they register properly
-            if (component.priority === 'low') {
+            if (component.priority === "low") {
               setTimeout(resolve, 200);
             } else {
               resolve();
@@ -66,11 +66,11 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log(`Component ${component.name} already registered`);
       }
     }
-    console.log('All components loaded sequentially');
-    
+    console.log("All components loaded sequentially");
+
     // Dispatch a custom event when all components are loaded
-    document.dispatchEvent(new CustomEvent('dsm-components-loaded'));
+    document.dispatchEvent(new CustomEvent("dsm-components-loaded"));
   };
-  
+
   loadSequentially();
 });
