@@ -16,6 +16,43 @@
   margin: 1rem auto 0;
 }
 
+.community-contribute {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.community-contribute summary {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.4rem 0.75rem;
+  border: 1px solid var(--community-arrow-bg);
+  border-radius: 4px;
+  color: var(--community-text);
+  cursor: pointer;
+  font-weight: 600;
+  list-style: none;
+}
+
+.community-contribute summary::-webkit-details-marker {
+  display: none;
+}
+
+.community-contribute summary i {
+  color: var(--accent-on-dark);
+  transition: transform 0.2s ease;
+}
+
+.community-contribute[open] summary i {
+  transform: rotate(45deg);
+}
+
+.community-contribute summary:focus-visible {
+  outline: 3px solid var(--accent-on-dark);
+  outline-offset: 3px;
+}
+
 .community-form-panel {
   padding: 1.5rem;
   border: 1px solid var(--community-arrow-bg);

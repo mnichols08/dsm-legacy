@@ -1092,159 +1092,178 @@
             <% } %>
           </div>
 
-          <div class="community-submission-grid">
-            <section
-              class="community-form-panel"
-              aria-labelledby="quote-form-title"
-            >
-              <h3 id="quote-form-title">Share your DSM story</h3>
-              <form
-                class="community-submission-form"
-                action="/api/submissions/quote"
-                method="post"
+          <details class="community-contribute">
+            <summary>
+              <i class="fas fa-plus" aria-hidden="true"></i>
+              <span>Contribute</span>
+            </summary>
+            <div class="community-submission-grid">
+              <section
+                class="community-form-panel"
+                aria-labelledby="quote-form-title"
               >
-                <label for="quote-text">Your quote</label>
-                <textarea
-                  id="quote-text"
-                  name="quote"
-                  rows="5"
-                  minlength="12"
-                  maxlength="800"
-                  required
-                ></textarea>
-                <label for="quote-name">Name to display (optional)</label>
-                <input id="quote-name" name="contributorName" maxlength="80" />
-                <label class="community-consent">
+                <h3 id="quote-form-title">Share your DSM story</h3>
+                <form
+                  class="community-submission-form"
+                  action="/api/submissions/quote"
+                  method="post"
+                >
+                  <label for="quote-text">Your quote</label>
+                  <textarea
+                    id="quote-text"
+                    name="quote"
+                    rows="5"
+                    minlength="12"
+                    maxlength="800"
+                    required
+                  ></textarea>
+                  <label for="quote-name">Name to display (optional)</label>
                   <input
-                    type="checkbox"
-                    name="publicationConsent"
-                    value="on"
+                    id="quote-name"
+                    name="contributorName"
+                    maxlength="80"
+                  />
+                  <label class="community-consent">
+                    <input
+                      type="checkbox"
+                      name="publicationConsent"
+                      value="on"
+                      required
+                    />
+                    <span
+                      >I give permission for this quote to be published if
+                      approved.</span
+                    >
+                  </label>
+                  <div class="community-form-trap" aria-hidden="true">
+                    <label for="quote-website">Leave this field empty</label>
+                    <input
+                      id="quote-website"
+                      name="website"
+                      tabindex="-1"
+                      autocomplete="off"
+                    />
+                  </div>
+                  <button class="btn" type="submit">SUBMIT QUOTE</button>
+                  <p class="community-form-status" aria-live="polite"></p>
+                </form>
+              </section>
+
+              <section
+                class="community-form-panel"
+                aria-labelledby="wording-form-title"
+              >
+                <h3 id="wording-form-title">Suggest a wording change</h3>
+                <form
+                  class="community-submission-form"
+                  action="/api/submissions/wording"
+                  method="post"
+                >
+                  <label for="wording-field">Section wording</label>
+                  <select id="wording-field" name="field" required>
+                    <option value="">Choose a section</option>
+                    <% contentFields.forEach((field) => { %>
+                    <option
+                      value="<%= field.sectionKey %>.<%= field.fieldKey %>"
+                    >
+                      <%= field.label %>
+                    </option>
+                    <% }); %>
+                  </select>
+                  <label for="wording-text">Suggested wording</label>
+                  <textarea
+                    id="wording-text"
+                    name="proposedValue"
+                    rows="5"
+                    maxlength="4000"
+                    required
+                  ></textarea>
+                  <label for="wording-name">Name (optional)</label>
+                  <input
+                    id="wording-name"
+                    name="contributorName"
+                    maxlength="80"
+                  />
+                  <div class="community-form-trap" aria-hidden="true">
+                    <label for="wording-website">Leave this field empty</label>
+                    <input
+                      id="wording-website"
+                      name="website"
+                      tabindex="-1"
+                      autocomplete="off"
+                    />
+                  </div>
+                  <button class="btn" type="submit">SEND SUGGESTION</button>
+                  <p class="community-form-status" aria-live="polite"></p>
+                </form>
+              </section>
+
+              <section
+                class="community-form-panel"
+                aria-labelledby="gallery-form-title"
+              >
+                <h3 id="gallery-form-title">Submit a gallery image</h3>
+                <form
+                  class="community-submission-form"
+                  action="/api/submissions/gallery"
+                  method="post"
+                  enctype="multipart/form-data"
+                >
+                  <label for="gallery-image">Image file</label>
+                  <input
+                    id="gallery-image"
+                    name="image"
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
                     required
                   />
-                  <span
-                    >I give permission for this quote to be published if
-                    approved.</span
-                  >
-                </label>
-                <div class="community-form-trap" aria-hidden="true">
-                  <label for="quote-website">Leave this field empty</label>
+                  <label for="gallery-caption">Caption</label>
                   <input
-                    id="quote-website"
-                    name="website"
-                    tabindex="-1"
-                    autocomplete="off"
-                  />
-                </div>
-                <button class="btn" type="submit">SUBMIT QUOTE</button>
-                <p class="community-form-status" aria-live="polite"></p>
-              </form>
-            </section>
-
-            <section
-              class="community-form-panel"
-              aria-labelledby="wording-form-title"
-            >
-              <h3 id="wording-form-title">Suggest a wording change</h3>
-              <form
-                class="community-submission-form"
-                action="/api/submissions/wording"
-                method="post"
-              >
-                <label for="wording-field">Section wording</label>
-                <select id="wording-field" name="field" required>
-                  <option value="">Choose a section</option>
-                  <% contentFields.forEach((field) => { %>
-                  <option value="<%= field.sectionKey %>.<%= field.fieldKey %>">
-                    <%= field.label %>
-                  </option>
-                  <% }); %>
-                </select>
-                <label for="wording-text">Suggested wording</label>
-                <textarea
-                  id="wording-text"
-                  name="proposedValue"
-                  rows="5"
-                  maxlength="4000"
-                  required
-                ></textarea>
-                <label for="wording-name">Name (optional)</label>
-                <input
-                  id="wording-name"
-                  name="contributorName"
-                  maxlength="80"
-                />
-                <div class="community-form-trap" aria-hidden="true">
-                  <label for="wording-website">Leave this field empty</label>
-                  <input
-                    id="wording-website"
-                    name="website"
-                    tabindex="-1"
-                    autocomplete="off"
-                  />
-                </div>
-                <button class="btn" type="submit">SEND SUGGESTION</button>
-                <p class="community-form-status" aria-live="polite"></p>
-              </form>
-            </section>
-
-            <section
-              class="community-form-panel"
-              aria-labelledby="gallery-form-title"
-            >
-              <h3 id="gallery-form-title">Submit a gallery image</h3>
-              <form
-                class="community-submission-form"
-                action="/api/submissions/gallery"
-                method="post"
-                enctype="multipart/form-data"
-              >
-                <label for="gallery-image">Image file</label>
-                <input
-                  id="gallery-image"
-                  name="image"
-                  type="file"
-                  accept="image/jpeg,image/png,image/webp"
-                  required
-                />
-                <label for="gallery-caption">Caption</label>
-                <input
-                  id="gallery-caption"
-                  name="caption"
-                  maxlength="160"
-                  required
-                />
-                <label for="gallery-alt-text">Image description</label>
-                <input
-                  id="gallery-alt-text"
-                  name="altText"
-                  maxlength="250"
-                  required
-                />
-                <label for="gallery-name">Name (optional)</label>
-                <input id="gallery-name" name="contributorName" maxlength="80" />
-                <label class="community-consent">
-                  <input
-                    type="checkbox"
-                    name="publicationConsent"
-                    value="on"
+                    id="gallery-caption"
+                    name="caption"
+                    maxlength="160"
                     required
                   />
-                  <span>I own this image or have permission to submit and publish it if approved.</span>
-                </label>
-                <div class="community-form-trap" aria-hidden="true">
-                  <label for="gallery-website">Leave this field empty</label>
+                  <label for="gallery-alt-text">Image description</label>
                   <input
-                    id="gallery-website"
-                    name="website"
-                    tabindex="-1"
-                    autocomplete="off"
+                    id="gallery-alt-text"
+                    name="altText"
+                    maxlength="250"
+                    required
                   />
-                </div>
-                <button class="btn" type="submit">SUBMIT IMAGE</button>
-                <p class="community-form-status" aria-live="polite"></p>
-              </form>
-            </section>
-          </div>
+                  <label for="gallery-name">Name (optional)</label>
+                  <input
+                    id="gallery-name"
+                    name="contributorName"
+                    maxlength="80"
+                  />
+                  <label class="community-consent">
+                    <input
+                      type="checkbox"
+                      name="publicationConsent"
+                      value="on"
+                      required
+                    />
+                    <span
+                      >I own this image or have permission to submit and publish
+                      it if approved.</span
+                    >
+                  </label>
+                  <div class="community-form-trap" aria-hidden="true">
+                    <label for="gallery-website">Leave this field empty</label>
+                    <input
+                      id="gallery-website"
+                      name="website"
+                      tabindex="-1"
+                      autocomplete="off"
+                    />
+                  </div>
+                  <button class="btn" type="submit">SUBMIT IMAGE</button>
+                  <p class="community-form-status" aria-live="polite"></p>
+                </form>
+              </section>
+            </div>
+          </details>
         </div>
       </section>
 
