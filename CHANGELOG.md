@@ -2,6 +2,17 @@
 
 Notable changes to the DSM site are documented here.
 
+## [0.2.0] - 2026-10-01
+
+### Added
+
+- Postgres connection pool and reversible migration commands.
+- Persistence schema for initial site content, anonymous wording/quote/image submissions, admin sessions, approved content revisions, and moderation audit events.
+- Idempotent import of the existing site content JSON and migration tests.
+- Local Postgres setup instructions.
+
+This release establishes database storage only. Public submissions, moderator sign-in, and image uploads are not enabled yet.
+
 ## [0.1.0] - 2026-10-01
 
 ### Added

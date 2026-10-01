@@ -1,6 +1,6 @@
 {
   "name": "dsm-legacy",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "engines": {
     "node": "22.x"
@@ -8,10 +8,17 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node --watch server.js",
-    "test": "node --test test/*.test.js"
+    "test": "node --test test/*.test.js",
+    "db:migrate": "node-pg-migrate up --migrations-dir migrations",
+    "db:rollback": "node-pg-migrate down --migrations-dir migrations",
+    "db:seed": "node scripts/seed-content.js"
   },
   "dependencies": {
     "ejs": "^3.1.10",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "pg": "^8.23.1"
+  },
+  "devDependencies": {
+    "node-pg-migrate": "^9.0.0"
   }
 }
