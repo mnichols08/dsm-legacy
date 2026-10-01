@@ -2,6 +2,41 @@
 
 Notable changes to the DSM site are documented here.
 
+## [0.4.0] - 2026-10-01
+
+### Added
+
+- Private Vercel Blob storage for user gallery images with database-gated public delivery and moderator-only pending previews.
+- Image upload limits, decoded-format validation, pixel bounds, EXIF-stripping WebP re-encoding, and cleanup after failed or rejected submissions.
+- Gallery submission consent, moderator preview/review controls, accessible alt text, and approved-only dynamic gallery rendering.
+- Tests for upload spoofing/size limits, private access, approval filtering, and gallery output escaping.
+
+Vercel Blob storage credentials and a Postgres database must be configured before submissions can be used.
+
+## [0.3.0] - 2026-10-01
+
+### Added
+
+- Anonymous, rate-limited wording and quote submission endpoints with input bounds, a honeypot, and explicit quote publication consent.
+- Provisioned moderator sign-in using bcrypt passwords, opaque hashed sessions, secure cookies, login rate limits, and CSRF tokens.
+- A protected moderator queue with transactional approve/reject actions and audit records.
+- Approved quote publishing and audited, allowlisted wording overrides.
+- Responsive community contribution forms and moderation pages; removed unverifiable sample testimonials.
+- Request security headers, migration support for session CSRF tokens, and integration tests for the text workflow.
+
+Image submissions and live Postgres/Vercel deployment remain follow-up work.
+
+## [0.2.0] - 2026-10-01
+
+### Added
+
+- Postgres connection pool and reversible migration commands.
+- Persistence schema for initial site content, anonymous wording/quote/image submissions, admin sessions, approved content revisions, and moderation audit events.
+- Idempotent import of the existing site content JSON and migration tests.
+- Local Postgres setup instructions.
+
+This release establishes database storage only. Public submissions, moderator sign-in, and image uploads are not enabled yet.
+
 ## [0.1.0] - 2026-10-01
 
 ### Added

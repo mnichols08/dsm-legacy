@@ -16,6 +16,11 @@ test("renders the existing homepage through EJS", async (context) => {
   assert.equal(response.status, 200);
   assert.match(html, /<title>Diamond Star Motors: Automotive Legend<\/title>/);
   assert.match(html, /<dsm-gallery>/);
+  assert.match(html, /Share your DSM story/);
+  assert.match(html, /<details class="community-contribute">/);
+  assert.doesNotMatch(html, /<details class="community-contribute" open>/);
+  assert.match(html, /Community stories will appear here after review/);
+  assert.doesNotMatch(html, /John R\.|Sarah M\.|Miguel C\.|Alex T\./);
 });
 
 test("serves site content and existing assets through the backend", async (context) => {

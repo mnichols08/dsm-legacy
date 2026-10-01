@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Moderator sign in | DSM</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/admin.css" />
+  </head>
+  <body class="admin-page">
+    <main class="admin-shell admin-login-panel">
+      <header class="admin-header">
+        <h1>DSM moderation</h1>
+        <a href="/">Return to site</a>
+      </header>
+      <section class="admin-panel">
+        <h2>Moderator sign in</h2>
+        <% if (error) { %>
+        <p class="admin-error" role="alert"><%= error %></p>
+        <% } %>
+        <form class="admin-login-form" action="/admin/login" method="post">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+          <label for="admin-email">Email</label>
+          <input
+            id="admin-email"
+            name="email"
+            type="email"
+            autocomplete="username"
+            maxlength="254"
+            required
+          />
+          <label for="admin-password">Password</label>
+          <input
+            id="admin-password"
+            name="password"
+            type="password"
+            autocomplete="current-password"
+            required
+          />
+          <button class="btn" type="submit">SIGN IN</button>
+        </form>
+      </section>
+    </main>
+  </body>
+</html>

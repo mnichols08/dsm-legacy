@@ -1,7 +1,7 @@
 {
   "functions": {
     "api/index.js": {
-      "includeFiles": "{index.html,views/**,data/site-content.json,css/**,images/**,js/**}"
+      "includeFiles": "{index.html,views/**,data/site-content.json,css/**,images/**,js/**,routes/**,lib/**,migrations/**,scripts/**}"
     }
   },
   "rewrites": [
