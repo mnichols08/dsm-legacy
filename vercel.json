@@ -1,0 +1,13 @@
+{
+  "functions": {
+    "api/index.js": {
+      "includeFiles": "{index.html,views/**,data/site-content.json,css/**,images/**,js/**}"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/api/index"
+    }
+  ]
+}
