@@ -2,6 +2,7 @@ const crypto = require("node:crypto");
 const express = require("express");
 const rateLimit = require("express-rate-limit");
 const bcrypt = require("bcryptjs");
+const { Readable } = require("node:stream");
 const { getEditableFields } = require("../lib/content-fields");
 
 const sessionCookieName = "dsm_admin_session";
@@ -10,6 +11,7 @@ const sessionDurationMs = 8 * 60 * 60 * 1000;
 const submissionTables = {
   wording: "content_suggestions",
   quote: "quote_submissions",
+  gallery: "gallery_submissions",
 };
 
 function hash(value) {
@@ -20,8 +22,10 @@ function matchesToken(expected, actual) {
   if (typeof expected !== "string" || typeof actual !== "string") return false;
   const expectedBuffer = Buffer.from(expected);
   const actualBuffer = Buffer.from(actual);
-  return expectedBuffer.length === actualBuffer.length &&
-    crypto.timingSafeEqual(expectedBuffer, actualBuffer);
+  return (
+    expectedBuffer.length === actualBuffer.length &&
+    crypto.timingSafeEqual(expectedBuffer, actualBuffer)
+  );
 }
 
 function cookieOptions(request, maxAge, cookiePath) {
@@ -34,8 +38,12 @@ function cookieOptions(request, maxAge, cookiePath) {
   };
 }
 
-function createAdminRouter({ poolProvider, siteContent }) {
+function createAdminRouter({ poolProvider, siteContent, storage }) {
   const router = express.Router();
+  router.use((request, response, next) => {
+    response.set("Cache-Control", "no-store");
+    next();
+  });
   const loginLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
     limit: 10,
@@ -75,12 +83,14 @@ function createAdminRouter({ poolProvider, siteContent }) {
       });
     }
 
-    const email = typeof request.body.email === "string"
-      ? request.body.email.trim().toLowerCase().slice(0, 254)
-      : "";
-    const password = typeof request.body.password === "string"
-      ? request.body.password.slice(0, 200)
-      : "";
+    const email =
+      typeof request.body.email === "string"
+        ? request.body.email.trim().toLowerCase().slice(0, 254)
+        : "";
+    const password =
+      typeof request.body.password === "string"
+        ? request.body.password.slice(0, 200)
+        : "";
     const pool = poolProvider();
     const result = await pool.query(
       `SELECT id, email, password_hash, role
@@ -152,7 +162,7 @@ function createAdminRouter({ poolProvider, siteContent }) {
 
   router.get("/", requireAdmin, async (request, response) => {
     const pool = poolProvider();
-    const [wordingResult, quoteResult] = await Promise.all([
+    const [wordingResult, quoteResult, galleryResult] = await Promise.all([
       pool.query(
         `SELECT id, section_key, field_key, proposed_value, contributor_name, created_at
          FROM content_suggestions WHERE status = 'pending' ORDER BY created_at ASC LIMIT 100`,
@@ -161,6 +171,10 @@ function createAdminRouter({ poolProvider, siteContent }) {
         `SELECT id, quote, contributor_name, created_at
          FROM quote_submissions WHERE status = 'pending' ORDER BY created_at ASC LIMIT 100`,
       ),
+      pool.query(
+        `SELECT id, storage_key, caption, alt_text, contributor_name, created_at
+         FROM gallery_submissions WHERE status = 'pending' ORDER BY created_at ASC LIMIT 100`,
+      ),
     ]);
 
     response.render("admin-queue", {
@@ -168,19 +182,60 @@ function createAdminRouter({ poolProvider, siteContent }) {
       csrfToken: request.admin.csrf_token,
       wordingSuggestions: wordingResult.rows,
       quotes: quoteResult.rows,
+      gallerySubmissions: galleryResult.rows,
       notice: request.query.notice || "",
     });
   });
 
-  router.post("/logout", requireAdmin, requireCsrf, async (request, response) => {
-    const sessionToken = request.cookies[sessionCookieName];
-    await poolProvider().query(
-      "DELETE FROM admin_sessions WHERE token_hash = $1",
-      [hash(sessionToken)],
-    );
-    response.clearCookie(sessionCookieName, { path: "/admin" });
-    response.redirect(303, "/admin/login");
-  });
+  router.post(
+    "/logout",
+    requireAdmin,
+    requireCsrf,
+    async (request, response) => {
+      const sessionToken = request.cookies[sessionCookieName];
+      await poolProvider().query(
+        "DELETE FROM admin_sessions WHERE token_hash = $1",
+        [hash(sessionToken)],
+      );
+
+      response.clearCookie(sessionCookieName, { path: "/admin" });
+      response.redirect(303, "/admin/login");
+    },
+  );
+
+  router.get(
+    "/submissions/gallery/:id/preview",
+    requireAdmin,
+    async (request, response) => {
+      const submissionId = Number(request.params.id);
+      if (!Number.isSafeInteger(submissionId) || submissionId < 1) {
+        return response.status(404).send("Not found");
+      }
+
+      const result = await poolProvider().query(
+        `SELECT storage_key
+         FROM gallery_submissions
+         WHERE id = $1 AND status = 'pending' AND publication_consent = true`,
+        [submissionId],
+      );
+      if (!result.rows[0] || !storage?.isConfigured()) {
+        return response.status(404).send("Not found");
+      }
+
+      const image = await storage.getPrivateImage(result.rows[0].storage_key);
+      if (!image || image.statusCode !== 200 || !image.stream) {
+        return response.status(404).send("Not found");
+      }
+
+      response.set({
+        "Cache-Control": "private, no-store",
+        "Content-Disposition": "inline",
+        "Content-Type": "image/webp",
+        "X-Content-Type-Options": "nosniff",
+      });
+      Readable.fromWeb(image.stream).pipe(response);
+    },
+  );
 
   router.post(
     "/submissions/:type/:id/review",
@@ -190,12 +245,17 @@ function createAdminRouter({ poolProvider, siteContent }) {
       const table = submissionTables[request.params.type];
       const submissionId = Number(request.params.id);
       const action = request.body.action;
-      const note = typeof request.body.note === "string"
-        ? request.body.note.trim().slice(0, 500)
-        : "";
+      const note =
+        typeof request.body.note === "string"
+          ? request.body.note.trim().slice(0, 500)
+          : "";
 
-      if (!table || !Number.isSafeInteger(submissionId) || submissionId < 1 ||
-        !["approved", "rejected"].includes(action)) {
+      if (
+        !table ||
+        !Number.isSafeInteger(submissionId) ||
+        submissionId < 1 ||
+        !["approved", "rejected"].includes(action)
+      ) {
         return response.status(400).send("Invalid moderation action.");
       }
 
@@ -211,14 +271,18 @@ function createAdminRouter({ poolProvider, siteContent }) {
 
         if (!submission || submission.status !== "pending") {
           await client.query("ROLLBACK");
-          return response.status(409).send("This submission has already been reviewed.");
+          return response
+            .status(409)
+            .send("This submission has already been reviewed.");
         }
 
         if (request.params.type === "wording" && action === "approved") {
           const fullPath = `${submission.section_key}.${submission.field_key}`;
           if (!editableFields.has(fullPath)) {
             await client.query("ROLLBACK");
-            return response.status(409).send("This content field is no longer editable.");
+            return response
+              .status(409)
+              .send("This content field is no longer editable.");
           }
 
           const contentResult = await client.query(
@@ -226,7 +290,9 @@ function createAdminRouter({ poolProvider, siteContent }) {
           );
           if (!contentResult.rows[0]) {
             await client.query("ROLLBACK");
-            return response.status(409).send("Import site content before approving wording changes.");
+            return response
+              .status(409)
+              .send("Import site content before approving wording changes.");
           }
           const persistedFields = new Set(
             getEditableFields(contentResult.rows[0].content).map(
@@ -235,7 +301,9 @@ function createAdminRouter({ poolProvider, siteContent }) {
           );
           if (!persistedFields.has(fullPath)) {
             await client.query("ROLLBACK");
-            return response.status(409).send("This content field is no longer available.");
+            return response
+              .status(409)
+              .send("This content field is no longer available.");
           }
 
           const revisionResult = await client.query(
@@ -274,7 +342,13 @@ function createAdminRouter({ poolProvider, siteContent }) {
           `INSERT INTO moderation_events
              (moderator_id, submission_type, submission_id, action, note)
            VALUES ($1, $2, $3, $4, $5)`,
-          [request.admin.id, request.params.type, submissionId, action, note || null],
+          [
+            request.admin.id,
+            request.params.type,
+            submissionId,
+            action,
+            note || null,
+          ],
         );
         await client.query("COMMIT");
       } catch (error) {
@@ -282,6 +356,23 @@ function createAdminRouter({ poolProvider, siteContent }) {
         throw error;
       } finally {
         client.release();
+      }
+
+      if (request.params.type === "gallery" && action === "rejected") {
+        const storageResult = await pool.query(
+          "SELECT storage_key FROM gallery_submissions WHERE id = $1",
+          [submissionId],
+        );
+        if (storageResult.rows[0] && storage?.isConfigured()) {
+          await storage
+            .deletePrivateImage(storageResult.rows[0].storage_key)
+            .catch((error) => {
+              console.error(
+                "Unable to delete rejected gallery image:",
+                error.message,
+              );
+            });
+        }
       }
 
       response.redirect(303, "/admin?notice=Decision+saved");

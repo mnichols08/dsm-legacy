@@ -12,7 +12,9 @@ async function createAdmin() {
     throw new Error("Set ADMIN_EMAIL to a valid email address.");
   }
   if (!password || password.length < 12 || password.length > 200) {
-    throw new Error("Set ADMIN_PASSWORD to a value between 12 and 200 characters.");
+    throw new Error(
+      "Set ADMIN_PASSWORD to a value between 12 and 200 characters.",
+    );
   }
   if (!new Set(["admin", "moderator"]).has(role)) {
     throw new Error("ADMIN_ROLE must be admin or moderator.");

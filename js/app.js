@@ -221,7 +221,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function initTestimonials() {
   const testimonials = document.querySelector(".testimonials");
-  if (!testimonials || testimonials.querySelectorAll(".testimonial").length < 2) {
+  if (
+    !testimonials ||
+    testimonials.querySelectorAll(".testimonial").length < 2
+  ) {
     return;
   }
 

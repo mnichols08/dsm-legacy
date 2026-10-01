@@ -30,6 +30,9 @@ test("published overrides update only allowlisted text and do not mutate source"
   ]);
 
   assert.equal(updated.about.paragraphs[0], "Approved copy.");
-  assert.equal(siteContent.about.paragraphs[0], "Chrysler's 1970 purchase of a 15% stake in Mitsubishi opened the door for rebadged Mitsubishis to fill America's demand for efficient compacts. By the early 1980s both companies were clashing with import quotas and dealership restrictions, making a U.S.-built solution essential.");
+  assert.equal(
+    siteContent.about.paragraphs[0],
+    "Chrysler's 1970 purchase of a 15% stake in Mitsubishi opened the door for rebadged Mitsubishis to fill America's demand for efficient compacts. By the early 1980s both companies were clashing with import quotas and dealership restrictions, making a U.S.-built solution essential.",
+  );
   assert.equal(updated.hero.image, siteContent.hero.image);
 });

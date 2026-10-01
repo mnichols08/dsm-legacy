@@ -1,6 +1,6 @@
 {
   "name": "dsm-legacy",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
   "engines": {
     "node": "22.x"
@@ -15,6 +15,7 @@
     "admin:create": "node scripts/create-admin.js"
   },
   "dependencies": {
+    "@vercel/blob": "^2.8.0",
     "bcryptjs": "^3.0.3",
     "cookie-parser": "^1.4.7",
     "dotenv": "^18.0.5",
@@ -22,7 +23,9 @@
     "express": "^5.1.0",
     "express-rate-limit": "^8.7.0",
     "helmet": "^8.3.0",
-    "pg": "^8.23.1"
+    "multer": "^2.4.0",
+    "pg": "^8.23.1",
+    "sharp": "^0.35.5"
   },
   "devDependencies": {
     "node-pg-migrate": "^9.0.0"

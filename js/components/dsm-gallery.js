@@ -7,8 +7,8 @@
 class DsmGallery extends HTMLElement {
   constructor() {
     super();
-    this.attachShadow({ mode: 'open' });
-    
+    this.attachShadow({ mode: "open" });
+
     this.shadowRoot.innerHTML = `
       <style>
         @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
@@ -183,140 +183,149 @@ class DsmGallery extends HTMLElement {
       </div>
     `;
   }
-  
+
   connectedCallback() {
     // Ensure the lightbox is initialized after the component has rendered
-    console.log('Gallery component connected to DOM');
+    console.log("Gallery component connected to DOM");
     setTimeout(() => {
       this.setupLightbox();
-      console.log('Gallery lightbox initialized');
+      console.log("Gallery lightbox initialized");
     }, 500);
   }
-  
+
   setupLightbox() {
-    const lightbox = this.shadowRoot.querySelector('.lightbox');
-    const lightboxImage = this.shadowRoot.querySelector('.lightbox-image');
-    const lightboxCaption = this.shadowRoot.querySelector('.lightbox-caption');
-    const closeBtn = this.shadowRoot.querySelector('.lightbox-close');
-    const prevBtn = this.shadowRoot.querySelector('.lightbox-prev');
-    const nextBtn = this.shadowRoot.querySelector('.lightbox-next');
-    
+    const lightbox = this.shadowRoot.querySelector(".lightbox");
+    const lightboxImage = this.shadowRoot.querySelector(".lightbox-image");
+    const lightboxCaption = this.shadowRoot.querySelector(".lightbox-caption");
+    const closeBtn = this.shadowRoot.querySelector(".lightbox-close");
+    const prevBtn = this.shadowRoot.querySelector(".lightbox-prev");
+    const nextBtn = this.shadowRoot.querySelector(".lightbox-next");
+
     let currentIndex = 0;
-    const galleryItems = this.querySelectorAll('dsm-gallery-item');
-    
+    const galleryItems = this.querySelectorAll("dsm-gallery-item");
+
     console.log(`Found ${galleryItems.length} gallery items`);
-    
+
     // Add a direct click event to each gallery item to ensure it works in all browsers
     galleryItems.forEach((item, index) => {
-      item.addEventListener('click', () => {
+      item.addEventListener("click", () => {
         currentIndex = index;
-        const image = item.getAttribute('image');
-        const caption = item.getAttribute('caption');
-        
+        const image = item.getAttribute("image");
+        const caption = item.getAttribute("caption");
+        const alt = item.getAttribute("alt");
+
         if (image) {
-          console.log(`Opening lightbox with image: ${image} (direct click handler)`);
+          console.log(
+            `Opening lightbox with image: ${image} (direct click handler)`,
+          );
           lightboxImage.src = image;
-          lightboxImage.alt = caption || 'Gallery image';
-          lightboxCaption.textContent = caption || '';
-          lightbox.classList.add('active');
-          
+          lightboxImage.alt = alt || caption || "Gallery image";
+          lightboxCaption.textContent = caption || "";
+          lightbox.classList.add("active");
+
           // Prevent scrolling when lightbox is open
-          document.body.style.overflow = 'hidden';
+          document.body.style.overflow = "hidden";
         }
       });
     });
-    
+
     // Fallback event delegation method
-    this.addEventListener('click', (e) => {
+    this.addEventListener("click", (e) => {
       // Find if we clicked on or inside a gallery item
       const path = e.composedPath && e.composedPath();
       if (!path) return; // Skip if composedPath is not supported
-      
-      const target = path.find(element => 
-        element.tagName && element.tagName.toLowerCase() === 'dsm-gallery-item'
+
+      const target = path.find(
+        (element) =>
+          element.tagName &&
+          element.tagName.toLowerCase() === "dsm-gallery-item",
       );
-      
+
       if (target) {
-        const image = target.getAttribute('image');
-        const caption = target.getAttribute('caption');
-        
+        const image = target.getAttribute("image");
+        const caption = target.getAttribute("caption");
+        const alt = target.getAttribute("alt");
+
         // Find index of clicked item
         galleryItems.forEach((item, index) => {
           if (item === target) {
             currentIndex = index;
           }
         });
-        
+
         if (image) {
           console.log(`Opening lightbox with image: ${image} (delegation)`);
           lightboxImage.src = image;
-          lightboxImage.alt = caption || 'Gallery image';
-          lightboxCaption.textContent = caption || '';
-          lightbox.classList.add('active');
-          
+          lightboxImage.alt = alt || caption || "Gallery image";
+          lightboxCaption.textContent = caption || "";
+          lightbox.classList.add("active");
+
           // Prevent scrolling when lightbox is open
-          document.body.style.overflow = 'hidden';
+          document.body.style.overflow = "hidden";
         }
       }
     });
-    
+
     // Close lightbox
-    closeBtn.addEventListener('click', () => {
-      lightbox.classList.remove('active');
-      document.body.style.overflow = '';
+    closeBtn.addEventListener("click", () => {
+      lightbox.classList.remove("active");
+      document.body.style.overflow = "";
     });
-    
+
     // Close on escape key
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && lightbox.classList.contains('active')) {
-        lightbox.classList.remove('active');
-        document.body.style.overflow = '';
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && lightbox.classList.contains("active")) {
+        lightbox.classList.remove("active");
+        document.body.style.overflow = "";
       }
-      
+
       // Navigate with arrow keys
-      if (lightbox.classList.contains('active')) {
-        if (e.key === 'ArrowLeft') {
+      if (lightbox.classList.contains("active")) {
+        if (e.key === "ArrowLeft") {
           navigatePrev();
-        } else if (e.key === 'ArrowRight') {
+        } else if (e.key === "ArrowRight") {
           navigateNext();
         }
       }
     });
-    
+
     // Click outside to close
-    lightbox.addEventListener('click', (e) => {
+    lightbox.addEventListener("click", (e) => {
       if (e.target === lightbox) {
-        lightbox.classList.remove('active');
-        document.body.style.overflow = '';
+        lightbox.classList.remove("active");
+        document.body.style.overflow = "";
       }
     });
-    
+
     // Navigation functions
     function navigateNext() {
       currentIndex = (currentIndex + 1) % galleryItems.length;
       const nextItem = galleryItems[currentIndex];
-      const image = nextItem.getAttribute('image');
-      const caption = nextItem.getAttribute('caption');
-      
+      const image = nextItem.getAttribute("image");
+      const caption = nextItem.getAttribute("caption");
+      const alt = nextItem.getAttribute("alt");
+
       lightboxImage.src = image;
-      lightboxImage.alt = caption || 'Gallery image';
-      lightboxCaption.textContent = caption || '';
+      lightboxImage.alt = alt || caption || "Gallery image";
+      lightboxCaption.textContent = caption || "";
     }
-    
+
     function navigatePrev() {
-      currentIndex = (currentIndex - 1 + galleryItems.length) % galleryItems.length;
+      currentIndex =
+        (currentIndex - 1 + galleryItems.length) % galleryItems.length;
       const prevItem = galleryItems[currentIndex];
-      const image = prevItem.getAttribute('image');
-      const caption = prevItem.getAttribute('caption');
-      
+      const image = prevItem.getAttribute("image");
+      const caption = prevItem.getAttribute("caption");
+      const alt = prevItem.getAttribute("alt");
+
       lightboxImage.src = image;
-      lightboxImage.alt = caption || 'Gallery image';
-      lightboxCaption.textContent = caption || '';
+      lightboxImage.alt = alt || caption || "Gallery image";
+      lightboxCaption.textContent = caption || "";
     }
-    
+
     // Navigation buttons
-    nextBtn.addEventListener('click', navigateNext);
-    prevBtn.addEventListener('click', navigatePrev);
+    nextBtn.addEventListener("click", navigateNext);
+    prevBtn.addEventListener("click", navigatePrev);
   }
 }
 
@@ -324,8 +333,8 @@ class DsmGallery extends HTMLElement {
 class DsmGalleryItem extends HTMLElement {
   constructor() {
     super();
-    this.attachShadow({ mode: 'open' });
-    
+    this.attachShadow({ mode: "open" });
+
     this.shadowRoot.innerHTML = `
       <style>
         :host {
@@ -400,41 +409,42 @@ class DsmGalleryItem extends HTMLElement {
       </div>
     `;
   }
-  
+
   static get observedAttributes() {
-    return ['image', 'caption'];
+    return ["image", "caption", "alt"];
   }
-  
+
   connectedCallback() {
     this.updateContent();
-    
+
     // Make the whole item more accessible and clickable
-    const galleryItem = this.shadowRoot.querySelector('.gallery-item');
-    galleryItem.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
+    const galleryItem = this.shadowRoot.querySelector(".gallery-item");
+    galleryItem.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
         // Simulate a click when pressing Enter or Space
         this.click();
       }
     });
   }
-  
+
   attributeChangedCallback(name, oldValue, newValue) {
     if (oldValue === newValue) return;
     this.updateContent();
   }
-  
+
   updateContent() {
-    const image = this.getAttribute('image');
-    const caption = this.getAttribute('caption');
-    
-    const imageElement = this.shadowRoot.querySelector('.gallery-image');
-    const captionElement = this.shadowRoot.querySelector('.gallery-caption');
-    
+    const image = this.getAttribute("image");
+    const caption = this.getAttribute("caption");
+    const alt = this.getAttribute("alt");
+
+    const imageElement = this.shadowRoot.querySelector(".gallery-image");
+    const captionElement = this.shadowRoot.querySelector(".gallery-caption");
+
     if (image) {
       imageElement.src = image;
-      imageElement.alt = caption || 'Gallery image';
+      imageElement.alt = alt || caption || "Gallery image";
     }
-    
+
     if (caption) {
       captionElement.textContent = caption;
     }
@@ -443,11 +453,13 @@ class DsmGalleryItem extends HTMLElement {
 
 // Register the components - make sure this is executed directly
 try {
-  customElements.define('dsm-gallery-item', DsmGalleryItem);
-  customElements.define('dsm-gallery', DsmGallery);
-  console.log('Successfully registered dsm-gallery and dsm-gallery-item components');
+  customElements.define("dsm-gallery-item", DsmGalleryItem);
+  customElements.define("dsm-gallery", DsmGallery);
+  console.log(
+    "Successfully registered dsm-gallery and dsm-gallery-item components",
+  );
 } catch (e) {
-  console.error('Error registering gallery components:', e);
+  console.error("Error registering gallery components:", e);
 }
 
 // Export the components for use in other modules

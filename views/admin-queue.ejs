@@ -90,6 +90,45 @@
         </article>
         <% }); %>
       </section>
+
+      <section aria-labelledby="gallery-heading">
+        <h2 id="gallery-heading">Gallery images</h2>
+        <% if (!gallerySubmissions.length) { %>
+        <p>No gallery images are waiting for review.</p>
+        <% } %> <% gallerySubmissions.forEach((submission) => { %>
+        <article class="admin-panel">
+          <h3><%= submission.caption %></h3>
+          <img
+            class="admin-gallery-preview"
+            src="/admin/submissions/gallery/<%= submission.id %>/preview"
+            alt="<%= submission.alt_text %>"
+          />
+          <p><%= submission.alt_text %></p>
+          <p>
+            Submitted by <%= submission.contributor_name || "Anonymous" %>
+            on <%= new Date(submission.created_at).toLocaleString() %>
+          </p>
+          <form
+            class="admin-review-form"
+            action="/admin/submissions/gallery/<%= submission.id %>/review"
+            method="post"
+          >
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+            <label for="gallery-note-<%= submission.id %>">Moderator note (optional)</label>
+            <textarea
+              id="gallery-note-<%= submission.id %>"
+              name="note"
+              rows="2"
+              maxlength="500"
+            ></textarea>
+            <div class="admin-review-actions">
+              <button class="btn" type="submit" name="action" value="approved">APPROVE</button>
+              <button class="btn" type="submit" name="action" value="rejected">REJECT</button>
+            </div>
+          </form>
+        </article>
+        <% }); %>
+      </section>
     </main>
   </body>
 </html>

@@ -2,6 +2,17 @@
 
 Notable changes to the DSM site are documented here.
 
+## [0.4.0] - 2026-10-01
+
+### Added
+
+- Private Vercel Blob storage for user gallery images with database-gated public delivery and moderator-only pending previews.
+- Image upload limits, decoded-format validation, pixel bounds, EXIF-stripping WebP re-encoding, and cleanup after failed or rejected submissions.
+- Gallery submission consent, moderator preview/review controls, accessible alt text, and approved-only dynamic gallery rendering.
+- Tests for upload spoofing/size limits, private access, approval filtering, and gallery output escaping.
+
+Vercel Blob storage credentials and a Postgres database must be configured before submissions can be used.
+
 ## [0.3.0] - 2026-10-01
 
 ### Added

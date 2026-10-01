@@ -22,11 +22,12 @@ test("valid text submissions are stored and invalid ones are rejected", async (c
   await once(server, "listening");
 
   const origin = `http://127.0.0.1:${server.address().port}`;
-  const submit = (path, values) => fetch(`${origin}${path}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: new URLSearchParams(values),
-  });
+  const submit = (path, values) =>
+    fetch(`${origin}${path}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams(values),
+    });
 
   const invalidQuote = await submit("/api/submissions/quote", {
     quote: "A real quote, but no consent.",
@@ -61,7 +62,8 @@ test("submission routes fail closed when Postgres is not configured", async (con
   const server = createApp().listen(0);
   context.after(() => {
     server.close();
-    if (previousDatabaseUrl !== undefined) process.env.DATABASE_URL = previousDatabaseUrl;
+    if (previousDatabaseUrl !== undefined)
+      process.env.DATABASE_URL = previousDatabaseUrl;
   });
   await once(server, "listening");
 
@@ -83,7 +85,11 @@ test("submission routes fail closed when Postgres is not configured", async (con
 test("admin review routes require a valid session", async (context) => {
   const previousDatabaseUrl = process.env.DATABASE_URL;
   process.env.DATABASE_URL = "postgres://unit-test.invalid/dsm";
-  const pool = { async query() { throw new Error("Unauthenticated route queried the database"); } };
+  const pool = {
+    async query() {
+      throw new Error("Unauthenticated route queried the database");
+    },
+  };
   const server = createApp({ poolProvider: () => pool }).listen(0);
   context.after(() => {
     server.close();
@@ -119,7 +125,9 @@ test("homepage renders approved quotes as escaped text", async (context) => {
       }
       if (sql.includes("FROM quote_submissions")) {
         return {
-          rows: [{ quote: "<script>alert(1)</script>", contributor_name: "Owner" }],
+          rows: [
+            { quote: "<script>alert(1)</script>", contributor_name: "Owner" },
+          ],
         };
       }
       return { rows: [] };

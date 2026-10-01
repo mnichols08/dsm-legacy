@@ -70,5 +70,8 @@ test("admin-session CSRF token migration is reversible", () => {
 
   assert.equal(addedColumn.table, "admin_sessions");
   assert.ok(addedColumn.columns.csrf_token);
-  assert.deepEqual(droppedColumn, { table: "admin_sessions", column: "csrf_token" });
+  assert.deepEqual(droppedColumn, {
+    table: "admin_sessions",
+    column: "csrf_token",
+  });
 });
