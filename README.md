@@ -23,4 +23,6 @@ npm run db:seed
 
 The seed command inserts the current `data/site-content.json` into `site_content` only when that singleton row is absent. It never overwrites existing database content. `npm run db:rollback` reverses the latest migration.
 
-The schema establishes submission, approval, admin-session, content-revision, and moderation-audit storage. Public submission routes, moderator sign-in, and upload handling are not enabled yet.
+To provision a moderator privately, set `ADMIN_EMAIL` and `ADMIN_PASSWORD` in the environment and run `npm run admin:create`. Passwords must be 12-200 characters; the account is stored as a bcrypt hash. Do not commit credentials or put them in source control.
+
+The community page accepts quote and wording submissions only when `DATABASE_URL` is configured and migrations plus the content seed have run. Submissions remain pending until a moderator signs in at `/admin` and reviews them. Approved quotes are published; approved wording is applied to allowlisted text fields with revision history. Image uploads are not enabled yet.

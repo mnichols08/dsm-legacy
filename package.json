@@ -1,6 +1,6 @@
 {
   "name": "dsm-legacy",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "engines": {
     "node": "22.x"
@@ -11,11 +11,17 @@
     "test": "node --test test/*.test.js",
     "db:migrate": "node-pg-migrate up --migrations-dir migrations",
     "db:rollback": "node-pg-migrate down --migrations-dir migrations",
-    "db:seed": "node scripts/seed-content.js"
+    "db:seed": "node scripts/seed-content.js",
+    "admin:create": "node scripts/create-admin.js"
   },
   "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^18.0.5",
     "ejs": "^3.1.10",
     "express": "^5.1.0",
+    "express-rate-limit": "^8.7.0",
+    "helmet": "^8.3.0",
     "pg": "^8.23.1"
   },
   "devDependencies": {

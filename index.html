@@ -1070,79 +1070,98 @@
             role="region"
             aria-label="Testimonials from DSM owners"
           >
-            <!-- Arrow indicators for scrolling -->
             <span class="sr-only"
               >Use left and right arrow keys to navigate testimonials</span
             >
+            <% if (approvedQuotes.length) { approvedQuotes.forEach((quote) => { %>
+            <article class="testimonial">
+              <p class="testimonial-text"><%= quote.quote %></p>
+              <% if (quote.contributor_name) { %>
+              <div class="testimonial-author">
+                <div class="author-info">
+                  <h4><%= quote.contributor_name %></h4>
+                </div>
+              </div>
+              <% } %>
+            </article>
+            <% }); } else { %>
+            <p class="community-empty">
+              Community stories will appear here after review.
+            </p>
+            <% } %>
+          </div>
 
-            <div class="testimonial">
-              <p class="testimonial-text">
-                "My 1990 Eclipse GSX was my first real performance car. Almost
-                30 years later, I'm still modifying and enjoying it. The DSM
-                community is like a family—we share a passion for these special
-                cars that were ahead of their time."
-              </p>
-              <div class="testimonial-author">
-                <div class="author-avatar">
-                  <img src="https://picsum.photos/id/1005/50/50" alt="John" />
+          <div class="community-submission-grid">
+            <section class="community-form-panel" aria-labelledby="quote-form-title">
+              <h3 id="quote-form-title">Share your DSM story</h3>
+              <form
+                class="community-submission-form"
+                action="/api/submissions/quote"
+                method="post"
+              >
+                <label for="quote-text">Your quote</label>
+                <textarea
+                  id="quote-text"
+                  name="quote"
+                  rows="5"
+                  minlength="12"
+                  maxlength="800"
+                  required
+                ></textarea>
+                <label for="quote-name">Name to display (optional)</label>
+                <input id="quote-name" name="contributorName" maxlength="80" />
+                <label class="community-consent">
+                  <input
+                    type="checkbox"
+                    name="publicationConsent"
+                    value="on"
+                    required
+                  />
+                  <span>I give permission for this quote to be published if approved.</span>
+                </label>
+                <div class="community-form-trap" aria-hidden="true">
+                  <label for="quote-website">Leave this field empty</label>
+                  <input id="quote-website" name="website" tabindex="-1" autocomplete="off" />
                 </div>
-                <div class="author-info">
-                  <h4>John R.</h4>
-                  <p>Eclipse GSX Owner since 1995</p>
+                <button class="btn" type="submit">SUBMIT QUOTE</button>
+                <p class="community-form-status" aria-live="polite"></p>
+              </form>
+            </section>
+
+            <section class="community-form-panel" aria-labelledby="wording-form-title">
+              <h3 id="wording-form-title">Suggest a wording change</h3>
+              <form
+                class="community-submission-form"
+                action="/api/submissions/wording"
+                method="post"
+              >
+                <label for="wording-field">Section wording</label>
+                <select id="wording-field" name="field" required>
+                  <option value="">Choose a section</option>
+                  <% contentFields.forEach((field) => { %>
+                  <option value="<%= field.sectionKey %>.<%= field.fieldKey %>">
+                    <%= field.label %>
+                  </option>
+                  <% }); %>
+                </select>
+                <label for="wording-text">Suggested wording</label>
+                <textarea
+                  id="wording-text"
+                  name="proposedValue"
+                  rows="5"
+                  maxlength="4000"
+                  required
+                ></textarea>
+                <label for="wording-name">Name (optional)</label>
+                <input id="wording-name" name="contributorName" maxlength="80" />
+                <div class="community-form-trap" aria-hidden="true">
+                  <label for="wording-website">Leave this field empty</label>
+                  <input id="wording-website" name="website" tabindex="-1" autocomplete="off" />
                 </div>
-              </div>
-            </div>
-            <div class="testimonial">
-              <p class="testimonial-text">
-                "The Eagle Talon TSi AWD was the perfect blend of Japanese
-                engineering and American style. I've owned mine for 25 years and
-                still get people asking about it at car shows. These vehicles
-                created a dedicated community unlike any other."
-              </p>
-              <div class="testimonial-author">
-                <div class="author-avatar">
-                  <img src="https://picsum.photos/id/1027/50/50" alt="Sarah" />
-                </div>
-                <div class="author-info">
-                  <h4>Sarah M.</h4>
-                  <p>Talon TSi AWD Enthusiast</p>
-                </div>
-              </div>
-            </div>
-            <div class="testimonial">
-              <p class="testimonial-text">
-                "I restored my dad's 1991 Plymouth Laser RS Turbo as a tribute
-                to him. The DSM online forums were incredibly helpful—strangers
-                became friends as they helped me source rare parts and
-                troubleshoot issues. That's the power of the DSM community."
-              </p>
-              <div class="testimonial-author">
-                <div class="author-avatar">
-                  <img src="https://picsum.photos/id/1012/50/50" alt="Miguel" />
-                </div>
-                <div class="author-info">
-                  <h4>Miguel C.</h4>
-                  <p>Laser RS Turbo Restorer</p>
-                </div>
-              </div>
-            </div>
-            <div class="testimonial">
-              <p class="testimonial-text">
-                "What makes DSMs special is how they democratized performance.
-                For a reasonable price, you got turbocharged power, available
-                AWD, and striking looks. These cars proved you didn't need deep
-                pockets to have a blast behind the wheel."
-              </p>
-              <div class="testimonial-author">
-                <div class="author-avatar">
-                  <img src="https://picsum.photos/id/1074/50/50" alt="Alex" />
-                </div>
-                <div class="author-info">
-                  <h4>Alex T.</h4>
-                  <p>DSM Collector</p>
-                </div>
-              </div>
-            </div>
+                <button class="btn" type="submit">SEND SUGGESTION</button>
+                <p class="community-form-status" aria-live="polite"></p>
+              </form>
+            </section>
           </div>
         </div>
       </section>
@@ -1283,6 +1302,7 @@
       enhanceMobileExperience();
     </script>
     <script src="js/theme-toggle.js" defer></script>
+    <script src="js/community-submissions.js" defer></script>
 
     <!-- Add structured data for SEO -->
     <script type="application/ld+json">

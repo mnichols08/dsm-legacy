@@ -2,6 +2,19 @@
 
 Notable changes to the DSM site are documented here.
 
+## [0.3.0] - 2026-10-01
+
+### Added
+
+- Anonymous, rate-limited wording and quote submission endpoints with input bounds, a honeypot, and explicit quote publication consent.
+- Provisioned moderator sign-in using bcrypt passwords, opaque hashed sessions, secure cookies, login rate limits, and CSRF tokens.
+- A protected moderator queue with transactional approve/reject actions and audit records.
+- Approved quote publishing and audited, allowlisted wording overrides.
+- Responsive community contribution forms and moderation pages; removed unverifiable sample testimonials.
+- Request security headers, migration support for session CSRF tokens, and integration tests for the text workflow.
+
+Image submissions and live Postgres/Vercel deployment remain follow-up work.
+
 ## [0.2.0] - 2026-10-01
 
 ### Added
