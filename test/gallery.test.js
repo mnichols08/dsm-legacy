@@ -98,7 +98,9 @@ test("failed database insertion deletes the private uploaded image", async (cont
       channels: 3,
       background: { r: 190, g: 40, b: 40 },
     },
-  }).png().toBuffer();
+  })
+    .png()
+    .toBuffer();
   let deletedKey;
   const storage = {
     isConfigured: () => true,
